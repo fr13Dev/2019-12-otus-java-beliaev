@@ -7,8 +7,8 @@ import java.util.Scanner;
 public class HelloOtus {
     public static void main(String[] args) {
         System.out.println("Type some words...");
-        Scanner s = new Scanner(System.in);
-        String str = s.nextLine();
+        final Scanner s = new Scanner(System.in);
+        final String str = s.nextLine();
         final int length = 1;
         Splitter.fixedLength(length)
                 .trimResults()
