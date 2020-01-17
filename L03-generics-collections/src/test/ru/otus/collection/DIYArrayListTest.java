@@ -135,6 +135,42 @@ public class DIYArrayListTest {
         Assert.assertTrue(list.isEmpty());
     }
 
+    @Test
+    public void removeFirstByIndex() {
+        populate(list, LIST_SIZE);
+        final Integer i = list.remove(0);
+        assertEquals(LIST_SIZE - 1, list.size());
+        assertEquals((long) i, 0);
+        assertEquals(1, (long) list.get(0));
+    }
+
+    @Test
+    public void removeLastByIndex() {
+        populate(list, LIST_SIZE);
+        final Integer i = list.remove(LIST_SIZE - 1);
+        assertEquals(LIST_SIZE - 1, list.size());
+        assertEquals((long) i, LIST_SIZE - 1);
+        assertEquals(LIST_SIZE - 2, (long) list.get(LIST_SIZE - 2));
+    }
+
+    @Test
+    public void removeMiddleByIndex() {
+        populate(list, LIST_SIZE);
+        final Integer i = list.remove(LIST_SIZE / 2);
+        assertEquals(LIST_SIZE - 1, list.size());
+        assertEquals((long) i, LIST_SIZE / 2);
+        assertEquals(LIST_SIZE - 1, (long) list.get(LIST_SIZE - 2));
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void removeFirstByObject() {
+        List<String> l = new DIYArrayList<>(1);
+        l.add("a");
+        l.remove("a");
+        assertEquals(0, list.size());
+        final Integer i = list.get(0);
+    }
+
     private void populate(Collection<Integer> c, int itemCount) {
         for (int i = 0; i < itemCount; i++) {
             c.add(i);

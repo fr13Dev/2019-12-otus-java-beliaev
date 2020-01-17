@@ -98,11 +98,6 @@ public class DIYArrayList<T> implements List<T> {
     }
 
     @Override
-    public <T1> T1[] toArray(T1[] a) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public void clear() {
         for (int i = 0; i < size; i++) {
             storage[i] = null;
@@ -121,13 +116,42 @@ public class DIYArrayList<T> implements List<T> {
     }
 
     @Override
+    public <T1> T1[] toArray(T1[] a) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public boolean contains(Object o) {
         throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean remove(Object o) {
-        throw new UnsupportedOperationException();
+        boolean founded = false;
+        for (int i = 0; i < size; i++) {
+            if (storage[i].equals(o)) {
+                remove(i);
+                founded = true;
+                break;
+            }
+        }
+        return founded;
+    }
+
+    @Override
+    public T remove(int index) {
+        if (index < 0 || index > size - 1) {
+            throw new IndexOutOfBoundsException();
+        }
+        final T i = storage[index];
+        if (size == 1) {
+            storage[index] = null;
+        } else {
+            System.arraycopy(storage, index + 1, storage, index, size - index - 1);
+            storage[size] = null;
+        }
+        size--;
+        return i;
     }
 
     @Override
@@ -152,11 +176,6 @@ public class DIYArrayList<T> implements List<T> {
 
     @Override
     public void add(int index, T element) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public T remove(int index) {
         throw new UnsupportedOperationException();
     }
 
