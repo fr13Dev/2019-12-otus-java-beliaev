@@ -38,7 +38,7 @@ public class DIYArrayListTest {
     @Test
     public void sortCollection() {
         populate(list, LIST_SIZE);
-        list.sort(Comparator.reverseOrder());
+        Collections.sort(list, Comparator.reverseOrder());
         assertEquals(LIST_SIZE - 1, (long) list.get(0));
     }
 

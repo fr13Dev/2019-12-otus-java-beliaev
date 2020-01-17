@@ -42,7 +42,8 @@ public class DIYArrayList<T> implements List<T> {
             System.arraycopy(storage, 0, temp, 0, size);
             storage = temp;
         }
-        storage[size++] = t;
+        storage[size] = t;
+        size++;
         return true;
     }
 
@@ -174,7 +175,9 @@ public class DIYArrayList<T> implements List<T> {
 
         @Override
         public T next() {
-            return storage[currentIndex++];
+            final T i = storage[currentIndex];
+            currentIndex++;
+            return i;
         }
     }
 
@@ -200,7 +203,8 @@ public class DIYArrayList<T> implements List<T> {
             if (cursor > size) {
                 throw new NoSuchElementException("There is no next element.");
             }
-            return storage[++cursor];
+            cursor++;
+            return storage[cursor];
         }
 
         @Override
@@ -213,7 +217,8 @@ public class DIYArrayList<T> implements List<T> {
             if (cursor == CURSOR_FIRST_VALUE) {
                 throw new NoSuchElementException("There is no previous element.");
             }
-            return storage[--cursor];
+            cursor--;
+            return storage[cursor];
         }
 
         @Override
