@@ -58,7 +58,7 @@ public class DIYArrayListTest {
     }
 
     @Test
-    public void addAllToEmpty() {
+    public void addAllToSmallerEmpty() {
         List<Integer> temp = new DIYArrayList<>();
         populate(temp, LIST_SIZE);
         list.addAll(temp);
@@ -67,7 +67,17 @@ public class DIYArrayListTest {
     }
 
     @Test
-    public void addAllToNonEmpty() {
+    public void addAllToBiggerEmpty() {
+        List<Integer> temp = new DIYArrayList<>();
+        final int index = 2;
+        populate(temp, index);
+        list.addAll(temp);
+        assertEquals(temp.size(), list.size());
+        assertEquals(0, (long) list.get(0));
+    }
+
+    @Test
+    public void addAllToSmallerNonEmpty() {
         List<Integer> temp = new DIYArrayList<>();
         populate(temp, LIST_SIZE);
         final int index = 2;
@@ -75,6 +85,29 @@ public class DIYArrayListTest {
         list.addAll(index, temp);
         assertEquals(temp.size() + index, list.size());
         assertEquals(10, (long) list.get(12));
+    }
+
+    @Test
+    public void addAllToBiggerNonEmpty() {
+        List<Integer> temp = new DIYArrayList<>();
+        final int index = 2;
+        populate(temp, index);
+        populate(list, LIST_SIZE);
+        list.addAll(index, temp);
+        assertEquals(LIST_SIZE, list.size());
+        assertEquals((long) temp.get(index - 1), (long) list.get(index + 1));
+    }
+
+    @Test
+    public void addAllOverride() {
+        List<Integer> temp = new DIYArrayList<>();
+        populate(temp, LIST_SIZE);
+        final byte index = 2;
+        populate(list, index);
+        final byte insertIndex = 1;
+        list.addAll(insertIndex, temp);
+        assertEquals(temp.size() + insertIndex, list.size());
+        assertEquals(10, (long) list.get(11));
     }
 
     @Test

@@ -48,11 +48,26 @@ public class DIYArrayList<T> implements List<T> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public boolean addAll(int index, Collection<? extends T> c) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException();
         }
-        c.forEach(this::add);
+        if (c.size() + index < currentCapacity) {
+            System.arraycopy(c.toArray(), 0, storage, index, c.size());
+            if (index == 0) {
+                size = c.size();
+            }
+        } else {
+            currentCapacity = c.size() + index;
+            Object[] temp = new Object[currentCapacity];
+            if (index != 0) {
+                System.arraycopy(storage, 0, temp, 0, index);
+            }
+            System.arraycopy(c.toArray(), 0, temp, index, c.size());
+            storage = (T[]) temp;
+            size = storage.length;
+        }
         return true;
     }
 
