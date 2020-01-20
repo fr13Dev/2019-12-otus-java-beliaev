@@ -103,6 +103,7 @@ public class DIYArrayList<T> implements List<T> {
             storage[i] = null;
         }
         size = 0;
+        reduceCapacity();
     }
 
     @Override
@@ -151,6 +152,7 @@ public class DIYArrayList<T> implements List<T> {
             storage[size] = null;
         }
         size--;
+        reduceCapacity();
         return i;
     }
 
@@ -197,6 +199,17 @@ public class DIYArrayList<T> implements List<T> {
     @SuppressWarnings("unchecked")
     private void initStorage(int capacity) {
         storage = (T[]) new Object[capacity];
+    }
+
+    @SuppressWarnings("unchecked")
+    private void reduceCapacity() {
+        if (currentCapacity > DEFAULT_INITIAL_CAPACITY
+                && (size == 0 || (currentCapacity / size) > 2)) {
+            currentCapacity = size;
+            final Object[] temp = new Object[currentCapacity];
+            System.arraycopy(storage, 0, temp, 0, size);
+            storage = (T[]) temp;
+        }
     }
 
     private class DIYIterator implements Iterator<T> {
