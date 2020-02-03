@@ -32,7 +32,7 @@ public class IoC {
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             if (annotatedMethods.contains(method.getName())) {
-                System.out.println("executed method: " + method.getName() + ", param: " + getFirstParam(args));
+                System.out.println("executed method: " + method.getName() + ", params: " + getParams(args));
             }
             return method.invoke(obj, args);
         }
@@ -48,8 +48,21 @@ public class IoC {
             }
         }
 
-        private String getFirstParam(Object[] args) {
-            return (args != null && args.length == 1 ? args[0].toString() : "no");
+        private String getParams(Object[] args) {
+            if (args == null) {
+                return "no";
+            } else {
+                final StringBuilder builder = new StringBuilder();
+                for (Object arg : args) {
+                    builder.append(arg.toString());
+                    builder.append(", ");
+                }
+                builder.replace(
+                        builder.lastIndexOf(", "),
+                        builder.length(),
+                        "");
+                return builder.toString();
+            }
         }
     }
 }
