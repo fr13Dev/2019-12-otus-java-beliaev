@@ -24,4 +24,9 @@ public class StringPalindromeNativeChecking implements StringPalindrome {
     public String generate() {
         return "xyz zyx";
     }
+
+    @Override
+    public String generate(boolean toUpperCase) {
+        return "XYZ ZYX";
+    }
 }

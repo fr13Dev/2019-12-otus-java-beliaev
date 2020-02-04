@@ -31,7 +31,7 @@ public class IoC {
 
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            if (annotatedMethods.contains(method.getName())) {
+            if (annotatedMethods.contains(getShortUniqueMethodName(method))) {
                 System.out.println("executed method: " + method.getName() + ", params: " + getParams(args));
             }
             return method.invoke(obj, args);
@@ -43,7 +43,7 @@ public class IoC {
             for (Method method : methods) {
                 final var annotation = method.getAnnotation(Log.class);
                 if (annotation != null) {
-                    annotatedMethods.add(method.getName());
+                    annotatedMethods.add(getShortUniqueMethodName(method));
                 }
             }
         }
@@ -63,6 +63,10 @@ public class IoC {
                         "");
                 return builder.toString();
             }
+        }
+
+        private String getShortUniqueMethodName(Method method) {
+            return method.toGenericString().replaceAll(".+?(?=" + method.getName() + ")", "");
         }
     }
 }

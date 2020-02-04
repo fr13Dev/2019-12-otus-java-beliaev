@@ -7,4 +7,8 @@ public interface StringPalindrome {
     default String generate() {
         return "abc cba";
     }
+
+    default String generate(boolean toUpperCase) {
+        return toUpperCase ? generate().toUpperCase() : generate();
+    }
 }

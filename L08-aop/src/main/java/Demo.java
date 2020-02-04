@@ -10,6 +10,7 @@ public class Demo {
         System.out.println(StringPalindromeNativeChecking.class.getName());
         System.out.println(instance1.isPalindrome("tac cat"));
         System.out.println(instance1.generate());
+        System.out.println((instance1.generate(true)));
         System.out.println("--------------------");
         final StringPalindrome instance2 = IoC.getInstance(new StringPalindromeStringBuilder());
         System.out.println(StringPalindromeStringBuilder.class.getName());
