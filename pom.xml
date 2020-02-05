@@ -24,6 +24,7 @@
         <module>L01-maven</module>
         <module>L03-generics-collections</module>
         <module>L06-gc</module>
+        <module>L08-aop</module>
     </modules>
 
     <properties>
