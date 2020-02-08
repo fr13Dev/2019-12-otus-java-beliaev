@@ -22,7 +22,6 @@ public class Runner {
         final Method closeMethod = getFirst(closeMethods);
 
         int done = 0;
-        int fail = 0;
         if (testMethods != null) {
             for (Method method : testMethods) {
                 if (skipMethods.contains(method)) {
@@ -35,8 +34,6 @@ public class Runner {
                     }
                     if (reflection.invokeMethod(obj, method)) {
                         done++;
-                    } else {
-                        fail++;
                     }
                     if (closeMethod != null) {
                         reflection.invokeMethod(obj, closeMethod);
@@ -47,7 +44,7 @@ public class Runner {
             System.out.println(
                     String.format(
                             "Total %d tests were ran, of which %d were skipped, %d were failed, %d were done.",
-                            testMethods.size(), skipMethods.size(), fail, done));
+                            testMethods.size(), skipMethods.size(), (testMethods.size() - skipMethods.size()) - done, done));
         }
     }
 
