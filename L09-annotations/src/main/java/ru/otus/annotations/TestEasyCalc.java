@@ -10,6 +10,7 @@ import ru.otus.annotations.testnb.matcher.Assert;
 
 @SuppressWarnings("unused")
 public class TestEasyCalc {
+    private final EasyCalc calc = new EasyCalc();
 
     @BeforeEach
     public void init() {
@@ -21,7 +22,6 @@ public class TestEasyCalc {
 
     @Test
     public void shouldSumTwoNumbers() throws TestFail {
-        final EasyCalc calc = new EasyCalc();
         final int result = calc.sum(5, 3);
         int expected = 9;
         Assert.assertThat(expected, result);
@@ -29,7 +29,6 @@ public class TestEasyCalc {
 
     @Test
     public void shouldDeductTwoNumbers() throws TestFail {
-        final EasyCalc calc = new EasyCalc();
         final int result = calc.deduct(5, 3);
         int expected = 2;
         Assert.assertThat(expected, result);
@@ -38,7 +37,6 @@ public class TestEasyCalc {
     @Skip
     @Test
     public void shouldMultiplyTwoNumbers() throws TestFail {
-        final EasyCalc calc = new EasyCalc();
         final int result = calc.multiply(5, 3);
         int expected = 15;
         Assert.assertThat(expected, result);

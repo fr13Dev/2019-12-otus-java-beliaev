@@ -4,6 +4,7 @@ import ru.otus.annotations.testnb.AfterEach;
 import ru.otus.annotations.testnb.BeforeEach;
 import ru.otus.annotations.testnb.Skip;
 import ru.otus.annotations.testnb.Test;
+import ru.otus.annotations.testnb.exception.InitFail;
 import ru.otus.annotations.testnb.reflection.Reflection;
 
 import java.lang.reflect.Method;
@@ -29,15 +30,22 @@ public class Runner {
                     System.out.println(" - was skipped.");
                 } else {
                     final T obj = reflection.getNewInstance();
+                    boolean testIsDone;
                     if (initMethod != null) {
-                        reflection.invokeMethod(obj, initMethod);
+                        testIsDone = reflection.invokeMethod(obj, initMethod);
+                        if (!testIsDone
+                                && closeMethod != null) {
+                            reflection.invokeMethod(obj, closeMethod);
+                            throw new InitFail();
+                        }
                     }
-                    if (reflection.invokeMethod(obj, method)) {
-                        done++;
-                    }
+                    testIsDone = reflection.invokeMethod(obj, method);
                     if (closeMethod != null) {
-                        reflection.invokeMethod(obj, closeMethod);
+                        if (!reflection.invokeMethod(obj, closeMethod)) {
+                            testIsDone = false;
+                        }
                     }
+                    done += testIsDone ? 1 : 0;
                 }
                 System.out.println();
             }
