@@ -7,23 +7,16 @@ import ru.otus.annotations.testnb.Test;
 import ru.otus.annotations.testnb.reflection.Reflection;
 
 import java.lang.reflect.Method;
-import java.util.Map;
 import java.util.Set;
 
 public class Runner {
-    private static final String BEFORE_EACH = BeforeEach.class.getSimpleName();
-    private static final String AFTER_EACH = AfterEach.class.getSimpleName();
-    private static final String TEST = Test.class.getSimpleName();
-    private static final String SKIP = Skip.class.getSimpleName();
 
     public static <T> void run(Class<T> clazz) {
         final Reflection<T> reflection = new Reflection<>(clazz);
-        final Map<String, Set<Method>> annotatedMethods = reflection.getAnnotatedMethods();
-
-        final Set<Method> initMethods = annotatedMethods.get(BEFORE_EACH);
-        final Set<Method> closeMethods = annotatedMethods.get(AFTER_EACH);
-        final Set<Method> testMethods = annotatedMethods.get(TEST);
-        final Set<Method> skipMethods = annotatedMethods.get(SKIP);
+        final Set<Method> initMethods = reflection.getAnnotatedMethods(BeforeEach.class);
+        final Set<Method> closeMethods = reflection.getAnnotatedMethods(AfterEach.class);
+        final Set<Method> testMethods = reflection.getAnnotatedMethods(Test.class);
+        final Set<Method> skipMethods = reflection.getAnnotatedMethods(Skip.class);
 
         final Method initMethod = getFirst(initMethods);
         final Method closeMethod = getFirst(closeMethods);
@@ -66,6 +59,7 @@ public class Runner {
         }
     }
 
+    @SuppressWarnings("unused")
     public static void run(Object obj) {
         run(obj.getClass());
     }
