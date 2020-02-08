@@ -6,6 +6,7 @@ import ru.otus.annotations.testnb.BeforeEach;
 import ru.otus.annotations.testnb.Skip;
 import ru.otus.annotations.testnb.Test;
 import ru.otus.annotations.testnb.exception.TestFail;
+import ru.otus.annotations.testnb.matcher.Assert;
 
 @SuppressWarnings("unused")
 public class TestEasyCalc {
@@ -23,7 +24,7 @@ public class TestEasyCalc {
         final EasyCalc calc = new EasyCalc();
         final int result = calc.sum(5, 3);
         int expected = 9;
-        assertThat(expected, result);
+        Assert.assertThat(expected, result);
     }
 
     @Test
@@ -31,7 +32,7 @@ public class TestEasyCalc {
         final EasyCalc calc = new EasyCalc();
         final int result = calc.deduct(5, 3);
         int expected = 2;
-        assertThat(expected, result);
+        Assert.assertThat(expected, result);
     }
 
     @Skip
@@ -40,12 +41,6 @@ public class TestEasyCalc {
         final EasyCalc calc = new EasyCalc();
         final int result = calc.multiply(5, 3);
         int expected = 15;
-        assertThat(expected, result);
-    }
-
-    private void assertThat(int expected, int actual) throws TestFail {
-        if (actual != expected) {
-            throw new TestFail(String.format("expected: %d, but was: %d", expected, actual));
-        }
+        Assert.assertThat(expected, result);
     }
 }
