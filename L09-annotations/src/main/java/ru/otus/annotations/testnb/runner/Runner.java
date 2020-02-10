@@ -70,16 +70,12 @@ public class Runner {
     }
 
     private static Method getFirst(Set<Method> methods) {
-        if (methods == null
-                || methods.size() == 0) {
+        if (methods == null || methods.size() == 0) {
             return null;
         } else if (methods.size() > 1) {
-            throw new IllegalStateException(
-                    "It isn't possible to use annotations BeforeEach/AfterEach for more than one method.");
+            throw new IllegalStateException("It isn't possible to use annotations BeforeEach/AfterEach for more than one method.");
         } else {
-            return methods.stream()
-                    .findFirst()
-                    .get();
+            return methods.stream().findFirst().get();
         }
     }
 }
