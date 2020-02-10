@@ -1,5 +1,8 @@
 package ru.otus.annotations.testnb.reflection;
 
+import ru.otus.annotations.testnb.exception.ExceptionUtil;
+import ru.otus.annotations.testnb.exception.TestFail;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -25,15 +28,11 @@ public class Reflection<T> {
         }
     }
 
-    public boolean invokeMethod(T obj, Method method) {
-        System.out.print(method.getName());
+    public void invokeMethod(T obj, Method method) throws TestFail {
         try {
             method.invoke(obj);
-            System.out.println(" - done.");
-            return true;
         } catch (IllegalAccessException | InvocationTargetException e) {
-            System.out.println(" - fail, reason: " + e.getCause().getMessage() + ".");
-            return false;
+            throw ExceptionUtil.convert(e);
         }
     }
 

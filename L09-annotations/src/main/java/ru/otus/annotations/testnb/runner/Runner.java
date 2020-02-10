@@ -4,7 +4,9 @@ import ru.otus.annotations.testnb.AfterEach;
 import ru.otus.annotations.testnb.BeforeEach;
 import ru.otus.annotations.testnb.Skip;
 import ru.otus.annotations.testnb.Test;
+import ru.otus.annotations.testnb.exception.CloseFail;
 import ru.otus.annotations.testnb.exception.InitFail;
+import ru.otus.annotations.testnb.exception.TestFail;
 import ru.otus.annotations.testnb.reflection.Reflection;
 
 import java.lang.reflect.Method;
@@ -22,37 +24,24 @@ public class Runner {
         final Method initMethod = getFirst(initMethods);
         final Method closeMethod = getFirst(closeMethods);
 
-        int done = 0;
+        int amountOfSucceedTests = 0;
         if (testMethods != null) {
-            for (Method method : testMethods) {
-                if (skipMethods.contains(method)) {
-                    System.out.print(method.getName());
+            for (Method testMethod : testMethods) {
+                if (skipMethods.contains(testMethod)) {
+                    System.out.print(testMethod.getName());
                     System.out.println(" - was skipped.");
                 } else {
                     final T obj = reflection.getNewInstance();
-                    boolean testIsDone;
-                    if (initMethod != null) {
-                        testIsDone = reflection.invokeMethod(obj, initMethod);
-                        if (!testIsDone
-                                && closeMethod != null) {
-                            reflection.invokeMethod(obj, closeMethod);
-                            throw new InitFail();
-                        }
+                    invokeInitMethod(reflection, initMethod, closeMethod, obj);
+                    if (invokeTestMethod(reflection, testMethod, closeMethod, obj)) {
+                        amountOfSucceedTests++;
                     }
-                    testIsDone = reflection.invokeMethod(obj, method);
-                    if (closeMethod != null) {
-                        if (!reflection.invokeMethod(obj, closeMethod)) {
-                            testIsDone = false;
-                        }
-                    }
-                    done += testIsDone ? 1 : 0;
                 }
-                System.out.println();
             }
             System.out.println(
                     String.format(
                             "Total %d tests were ran, of which %d were skipped, %d were failed, %d were done.",
-                            testMethods.size(), skipMethods.size(), (testMethods.size() - skipMethods.size()) - done, done));
+                            testMethods.size(), skipMethods.size(), (testMethods.size() - skipMethods.size()) - amountOfSucceedTests, amountOfSucceedTests));
         }
     }
 
@@ -77,5 +66,46 @@ public class Runner {
         } else {
             return methods.stream().findFirst().get();
         }
+    }
+
+    private static <T> void invokeInitMethod(Reflection<T> rfl, Method method, Method closeMethod, T obj) {
+        if (method != null) {
+            boolean isDone = false;
+            try {
+                rfl.invokeMethod(obj, method);
+                isDone = true;
+            } catch (TestFail e) {
+                throw new InitFail();
+            } finally {
+                if (!isDone) {
+                    invokeCloseMethod(rfl, closeMethod, obj);
+                }
+            }
+        }
+    }
+
+    private static <T> void invokeCloseMethod(Reflection<T> rfl, Method method, T obj) {
+        if (method != null) {
+            try {
+                rfl.invokeMethod(obj, method);
+            } catch (TestFail e) {
+                throw new CloseFail();
+            }
+        }
+    }
+
+    private static <T> boolean invokeTestMethod(Reflection<T> rfl, Method method, Method closeMethod, T obj) {
+        System.out.print(method.getName());
+        boolean isDone = false;
+        try {
+            rfl.invokeMethod(obj, method);
+            System.out.println(" - done.");
+            isDone = true;
+        } catch (TestFail e) {
+            System.out.println(e.getMessage());
+        } finally {
+            invokeCloseMethod(rfl, closeMethod, obj);
+        }
+        return isDone;
     }
 }
