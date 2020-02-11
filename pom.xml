@@ -25,6 +25,7 @@
         <module>L03-generics-collections</module>
         <module>L06-gc</module>
         <module>L08-aop</module>
+        <module>L09-annotations</module>
     </modules>
 
     <properties>
