@@ -14,6 +14,13 @@ public class Banknote {
     }
 
     @Override
+    public String toString() {
+        return "Banknote{" +
+                "denomination=" + denomination +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

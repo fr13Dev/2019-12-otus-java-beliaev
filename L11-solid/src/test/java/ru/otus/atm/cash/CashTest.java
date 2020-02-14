@@ -1,0 +1,43 @@
+package ru.otus.atm.cash;
+
+import org.junit.Test;
+import ru.otus.atm.AbstractTest;
+
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+
+public class CashTest extends AbstractTest {
+
+    @Test
+    public void addSomeBanknotesAndReturnAmount() {
+        final Cash cashIn = new Cash(
+                List.of(ONE_THOUSAND, SEVEN_HUNDRED));
+        final int amount = cashIn.getAmount();
+        assertEquals(ONE_THOUSAND.getDenomination() + SEVEN_HUNDRED.getDenomination(), amount);
+    }
+
+    @Test
+    public void addOneBanknoteAndReturnAmount() {
+        final Cash cashIn = new Cash(ONE_THOUSAND);
+        final int amount = cashIn.getAmount();
+        assertEquals(ONE_THOUSAND.getDenomination(), amount);
+    }
+
+    @Test
+    public void addSomeBanknotesAndReturnBanknotes() {
+        final Cash cashIn = new Cash(
+                List.of(ONE_THOUSAND, ONE_THOUSAND, SEVEN_HUNDRED));
+        final Map<Banknote, Integer> banknotes = cashIn.getBanknotes();
+        assertEquals(2, (long) banknotes.get(ONE_THOUSAND));
+        assertEquals(1, (long) banknotes.get(SEVEN_HUNDRED));
+    }
+
+    @Test
+    public void addSomeBanknotesAndReturnBanknotesQuantity() {
+        final Cash cashIn = new Cash(
+                List.of(ONE_THOUSAND, ONE_THOUSAND, SEVEN_HUNDRED, SEVEN_HUNDRED));
+        assertEquals(4, cashIn.getBanknotesQuantity());
+    }
+}
