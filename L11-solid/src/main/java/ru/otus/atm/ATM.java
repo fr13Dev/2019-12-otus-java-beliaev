@@ -4,6 +4,8 @@ import ru.otus.atm.cash.Banknote;
 import ru.otus.atm.cash.Cash;
 import ru.otus.atm.cashissuing.CashIssuing;
 import ru.otus.atm.exception.IllegalAmountException;
+import ru.otus.atm.storage.CashStorage;
+import ru.otus.atm.storage.Storage;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -12,6 +14,7 @@ import java.util.Map;
 
 public class ATM {
     private final Map<Banknote, Integer> cells = new HashMap<>();
+    private final Storage storage = new CashStorage();
     private final CashIssuing cashIssuing;
     private int amount;
 
