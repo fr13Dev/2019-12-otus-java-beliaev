@@ -4,7 +4,6 @@ import org.junit.Test;
 import ru.otus.atm.AbstractTest;
 
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -27,11 +26,11 @@ public class CashTest extends AbstractTest {
 
     @Test
     public void addSomeBanknotesAndReturnBanknotes() {
-        final Cash cashIn = new Cash(
+        var cashIn = new Cash(
                 List.of(ONE_THOUSAND, ONE_THOUSAND, SEVEN_HUNDRED));
-        final Map<Banknote, Integer> banknotes = cashIn.getBanknotes();
-        assertEquals(2, (long) banknotes.get(ONE_THOUSAND));
-        assertEquals(1, (long) banknotes.get(SEVEN_HUNDRED));
+        var banknotes = cashIn.getBanknotes();
+        assertEquals(3, cashIn.getBanknotesQuantity());
+        assertEquals(2_700, cashIn.getAmount());
     }
 
     @Test

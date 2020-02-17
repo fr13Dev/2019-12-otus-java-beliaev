@@ -11,6 +11,10 @@ public interface Cell {
 
     int getBanknotesQuantity();
 
+    void decrementBanknoteQuantity();
+
+    void addBanknote();
+
     void addBanknotes(int quantity);
 
     List<Banknote> getBanknotes(int quantity) throws IllegalAmountException;

@@ -2,31 +2,27 @@ package ru.otus.atm.cashissuing;
 
 import ru.otus.atm.cash.Banknote;
 import ru.otus.atm.exception.IllegalAmountException;
+import ru.otus.atm.storage.Storage;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class MinimumBanknotesQuantity implements CashIssuing {
 
     @Override
-    public List<Banknote> getBanknotes(Map<Banknote, Integer> atmCells, int amount) throws IllegalAmountException {
+    public List<Banknote> getBanknotes(Storage storage, int amount) throws IllegalAmountException {
         int originalAmount = amount;
-        final List<Banknote> availableBanknotesByDesc = atmCells.keySet().stream()
-                .sorted(Comparator.comparingInt(Banknote::getDenomination).reversed())
-                .collect(Collectors.toList());
+        final List<Banknote> availableBanknotesByDesc = storage.getAvailableBanknotes();
         List<Banknote> banknotes = new ArrayList<>();
         for (Banknote banknote : availableBanknotesByDesc) {
-            final int denomination = banknote.getDenomination();
-            final int currentAmount = amount - (amount % denomination);
+            var denomination = banknote.getDenomination();
+            var currentAmount = amount - (amount % denomination);
             if (currentAmount != 0) {
-                final int remainAmount = amount - currentAmount;
-                final int qntyAvailableBanknotes = atmCells.get(banknote);
-                final int currentAvailableAmount = qntyAvailableBanknotes * denomination;
+                var remainAmount = amount - currentAmount;
+                var qntyAvailableBanknotes = storage.getAvailableQuantityOfBanknote(banknote);
+                var currentAvailableAmount = qntyAvailableBanknotes * denomination;
                 if (remainAmount != 0 && currentAmount <= currentAvailableAmount) {
-                    if (isPossibleToGiveAmountByExistingBanknotes(atmCells, remainAmount)) {
+                    if (isPossibleToGiveAmountByExistingBanknotes(availableBanknotesByDesc, remainAmount)) {
                         continue;
                     }
                 }
@@ -35,8 +31,7 @@ public class MinimumBanknotesQuantity implements CashIssuing {
                 } else if (currentAmount < currentAvailableAmount) {
                     addBanknotes(banknotes, denomination, 1);
                     amount -= denomination;
-                }
-                else {
+                } else {
                     addBanknotes(banknotes, denomination, qntyAvailableBanknotes);
                     amount -= qntyAvailableBanknotes * denomination;
                 }
@@ -48,10 +43,8 @@ public class MinimumBanknotesQuantity implements CashIssuing {
         return banknotes;
     }
 
-    private boolean isPossibleToGiveAmountByExistingBanknotes(Map<Banknote, Integer> atmCells, int amount) {
-        return atmCells.keySet()
-                .stream()
-                .noneMatch(i -> i.getDenomination() == amount);
+    private boolean isPossibleToGiveAmountByExistingBanknotes(List<Banknote> banknotes, int amount) {
+        return banknotes.stream().noneMatch(i -> i.getDenomination() == amount);
     }
 
     private void addBanknotes(List<Banknote> banknotesToIssue, int denomination, int qntyAvailableBanknotes) {

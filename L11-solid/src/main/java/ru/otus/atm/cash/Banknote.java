@@ -1,16 +1,26 @@
 package ru.otus.atm.cash;
 
+import ru.otus.atm.exception.NoSuchDenominationException;
+
 import java.util.Objects;
 
 public class Banknote {
-    private final int denomination;
+    private final Denominations denomination;
 
-    public Banknote(int denomination) {
+    public Banknote(Denominations denomination) {
         this.denomination = denomination;
     }
 
+    public Banknote(int denomination) {
+        try {
+            this.denomination = Denominations.instanceOf(denomination);
+        } catch (NoSuchDenominationException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
     public int getDenomination() {
-        return denomination;
+        return denomination.getDenomination();
     }
 
     @Override

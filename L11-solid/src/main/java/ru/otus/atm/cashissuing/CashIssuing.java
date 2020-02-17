@@ -2,12 +2,12 @@ package ru.otus.atm.cashissuing;
 
 import ru.otus.atm.cash.Banknote;
 import ru.otus.atm.exception.IllegalAmountException;
+import ru.otus.atm.storage.Storage;
 
 import java.util.List;
-import java.util.Map;
 
 @FunctionalInterface
 public interface CashIssuing {
 
-    List<Banknote> getBanknotes(Map<Banknote, Integer> atmCells, int amount) throws IllegalAmountException;
+    List<Banknote> getBanknotes(Storage storage, int amount) throws IllegalAmountException;
 }

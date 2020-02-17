@@ -26,6 +26,16 @@ public class CashCell implements Cell {
     }
 
     @Override
+    public void decrementBanknoteQuantity() {
+        quantity--;
+    }
+
+    @Override
+    public void addBanknote() {
+        quantity++;
+    }
+
+    @Override
     public void addBanknotes(int quantity) {
         this.quantity += quantity;
     }
