@@ -27,7 +27,9 @@ public class CashCell implements Cell {
 
     @Override
     public void decrementBanknoteQuantity() {
-        quantity--;
+        if (quantity != 0) {
+            quantity--;
+        }
     }
 
     @Override
