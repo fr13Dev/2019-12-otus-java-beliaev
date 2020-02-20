@@ -6,10 +6,10 @@ import ru.otus.atm.exception.IllegalAmountException;
 import ru.otus.atm.storage.CashStorage;
 import ru.otus.atm.storage.Storage;
 
-public class ATM {
+public class Atm {
     private final Storage storage;
 
-    public ATM(CashIssuing cashIssuing) {
+    public Atm(CashIssuing cashIssuing) {
         storage = new CashStorage(cashIssuing);
     }
 

@@ -2,15 +2,13 @@ package ru.otus.atm;
 
 import org.junit.Test;
 import ru.otus.atm.cash.Cash;
-import ru.otus.atm.cashissuing.MinimumBanknotesQuantity;
 import ru.otus.atm.exception.IllegalAmountException;
 
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class ATMTest extends AbstractTest {
-    private final ATM atm = new ATM(new MinimumBanknotesQuantity());
+public class AtmTest extends AbstractTest {
 
     @Test
     public void putOneBanknoteAndReturnCashAmount() {

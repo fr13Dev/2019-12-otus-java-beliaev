@@ -10,7 +10,7 @@ import ru.otus.atm.storage.CashCellTest;
 @Suite.SuiteClasses({
         CashTest.class,
         MinimumBanknotesQuantityTest.class,
-        ATMTest.class,
+        AtmTest.class,
         CashCellTest.class
 })
 public class AllTests {
