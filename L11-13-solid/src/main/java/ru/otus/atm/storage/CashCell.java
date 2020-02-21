@@ -1,5 +1,6 @@
 package ru.otus.atm.storage;
 
+import ru.otus.atm.backup.CellState;
 import ru.otus.atm.cash.Banknote;
 import ru.otus.atm.exception.IllegalAmountException;
 
@@ -13,6 +14,11 @@ public class CashCell implements Cell {
 
     public CashCell(Banknote baseBanknote) {
         this.baseBanknote = baseBanknote;
+    }
+
+    public CashCell(CashCell cell) {
+        baseBanknote = cell.getBaseBanknote();
+        quantity = cell.getBanknotesQuantity();
     }
 
     @Override
@@ -53,5 +59,13 @@ public class CashCell implements Cell {
             banknotes.add(new Banknote(baseBanknote.getDenomination()));
         }
         return banknotes;
+    }
+
+    public void load(CellState save) {
+        quantity = save.getCell().getBanknotesQuantity();
+    }
+
+    public CellState save() {
+        return new CellState(this);
     }
 }
