@@ -73,6 +73,7 @@ public class CashStorage implements Storage {
         return Collections.unmodifiableSet(storage);
     }
 
+    @Override
     public CashIssuing getCashIssuing() {
         return cashIssuing;
     }

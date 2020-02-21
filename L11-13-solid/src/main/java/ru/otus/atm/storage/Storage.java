@@ -1,6 +1,7 @@
 package ru.otus.atm.storage;
 
 import ru.otus.atm.cash.Banknote;
+import ru.otus.atm.cashissuing.CashIssuing;
 import ru.otus.atm.exception.IllegalAmountException;
 
 import java.util.List;
@@ -18,4 +19,6 @@ public interface Storage {
     int getAvailableQuantityOfBanknote(Banknote banknote);
 
     int getBalance();
+
+    CashIssuing getCashIssuing();
 }
