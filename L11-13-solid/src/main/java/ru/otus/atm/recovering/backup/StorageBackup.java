@@ -1,6 +1,7 @@
-package ru.otus.atm.backup;
+package ru.otus.atm.recovering.backup;
 
-// Caretaker
+import ru.otus.atm.recovering.state.StorageState;
+
 public class StorageBackup implements Backup<StorageState> {
     private StorageState storageState;
 

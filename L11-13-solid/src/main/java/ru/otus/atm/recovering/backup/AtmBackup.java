@@ -1,4 +1,6 @@
-package ru.otus.atm.backup;
+package ru.otus.atm.recovering.backup;
+
+import ru.otus.atm.recovering.state.AtmState;
 
 public class AtmBackup implements Backup<AtmState> {
     private AtmState atmState;

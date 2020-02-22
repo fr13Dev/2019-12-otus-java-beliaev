@@ -1,14 +1,15 @@
 package ru.otus.atm.storage;
 
-import ru.otus.atm.backup.CellState;
 import ru.otus.atm.cash.Banknote;
 import ru.otus.atm.exception.IllegalAmountException;
+import ru.otus.atm.recovering.Recovering;
+import ru.otus.atm.recovering.state.CellState;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class CashCell implements Cell {
+public class CashCell implements Cell, Recovering<CellState> {
     private final Banknote baseBanknote;
     private int quantity;
 
@@ -61,10 +62,12 @@ public class CashCell implements Cell {
         return banknotes;
     }
 
-    public void load(CellState save) {
-        quantity = save.getCell().getBanknotesQuantity();
+    @Override
+    public void load(CellState state) {
+        quantity = state.get().getBanknotesQuantity();
     }
 
+    @Override
     public CellState save() {
         return new CellState(this);
     }

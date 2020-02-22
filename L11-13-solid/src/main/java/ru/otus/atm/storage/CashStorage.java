@@ -1,18 +1,19 @@
 package ru.otus.atm.storage;
 
-import ru.otus.atm.backup.Backup;
-import ru.otus.atm.backup.CellBackup;
-import ru.otus.atm.backup.CellState;
-import ru.otus.atm.backup.StorageState;
 import ru.otus.atm.cash.Banknote;
 import ru.otus.atm.cash.Denominations;
 import ru.otus.atm.cashissuing.CashIssuing;
 import ru.otus.atm.exception.IllegalAmountException;
+import ru.otus.atm.recovering.Recovering;
+import ru.otus.atm.recovering.backup.Backup;
+import ru.otus.atm.recovering.backup.CellBackup;
+import ru.otus.atm.recovering.state.CellState;
+import ru.otus.atm.recovering.state.StorageState;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class CashStorage implements Storage {
+public class CashStorage implements Storage, Recovering<StorageState> {
     private final Set<Cell> storage = new HashSet<>();
     private final CashIssuing cashIssuing;
     private int balance;
@@ -24,11 +25,11 @@ public class CashStorage implements Storage {
 
     public CashStorage(CashStorage storage) {
         this.cashIssuing = storage.getCashIssuing();
-        this.balance = storage.balance;
+        this.balance = storage.getBalance();
         storage.getStorage().forEach(i -> {
             final Backup<CellState> cellBackup = new CellBackup();
             cellBackup.setState(new CellState((CashCell) i));
-            this.storage.add(cellBackup.getState().getCell());
+            this.storage.add(cellBackup.getState().get());
         });
     }
 
@@ -78,12 +79,14 @@ public class CashStorage implements Storage {
         return cashIssuing;
     }
 
-    public void load(StorageState save) {
-        this.balance = save.getStorage().getBalance();
+    @Override
+    public void load(StorageState state) {
+        this.balance = state.get().getBalance();
         this.storage.clear();
-        this.storage.addAll(save.getStorage().getStorage());
+        this.storage.addAll(state.get().getStorage());
     }
 
+    @Override
     public StorageState save() {
         return new StorageState(this);
     }

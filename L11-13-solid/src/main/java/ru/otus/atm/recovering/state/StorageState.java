@@ -1,16 +1,16 @@
-package ru.otus.atm.backup;
+package ru.otus.atm.recovering.state;
 
 import ru.otus.atm.storage.CashStorage;
 
-// Memento
-public class StorageState {
+public class StorageState implements State<CashStorage> {
     private final CashStorage storage;
 
     public StorageState(CashStorage storage) {
         this.storage = new CashStorage(storage);
     }
 
-    public CashStorage getStorage() {
+    @Override
+    public CashStorage get() {
         return storage;
     }
 }

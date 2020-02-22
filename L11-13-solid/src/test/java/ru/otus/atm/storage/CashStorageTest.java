@@ -2,11 +2,11 @@ package ru.otus.atm.storage;
 
 import org.junit.Test;
 import ru.otus.atm.AbstractTest;
-import ru.otus.atm.backup.Backup;
-import ru.otus.atm.backup.StorageBackup;
-import ru.otus.atm.backup.StorageState;
 import ru.otus.atm.cashissuing.MinimumBanknotesQuantity;
 import ru.otus.atm.exception.IllegalAmountException;
+import ru.otus.atm.recovering.backup.Backup;
+import ru.otus.atm.recovering.backup.StorageBackup;
+import ru.otus.atm.recovering.state.StorageState;
 
 import java.util.List;
 

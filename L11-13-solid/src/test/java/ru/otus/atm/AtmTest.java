@@ -1,11 +1,11 @@
 package ru.otus.atm;
 
 import org.junit.Test;
-import ru.otus.atm.backup.AtmBackup;
-import ru.otus.atm.backup.AtmState;
-import ru.otus.atm.backup.Backup;
 import ru.otus.atm.cash.Cash;
 import ru.otus.atm.exception.IllegalAmountException;
+import ru.otus.atm.recovering.backup.AtmBackup;
+import ru.otus.atm.recovering.backup.Backup;
+import ru.otus.atm.recovering.state.AtmState;
 
 import java.util.List;
 
@@ -116,7 +116,7 @@ public class AtmTest extends AbstractTest {
         atm.putCash(new Cash(
                 List.of(ONE_THOUSAND, SEVEN_HUNDRED)));
         final Backup<AtmState> backup = new AtmBackup();
-        backup.setState(new AtmState(atm));
+        backup.setState(atm.save());
         atm.getCash(SEVEN_HUNDRED.getDenomination() + ONE_THOUSAND.getDenomination());
         atm.load(backup.getState());
         assertEquals(1_700, atm.getCashAmount());
