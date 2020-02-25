@@ -6,13 +6,14 @@ import ru.otus.atm.storage.Storage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MinimumBanknotesQuantity implements CashIssuing {
 
     @Override
     public List<Banknote> getBanknotes(Storage storage, int amount) throws IllegalAmountException {
         int originalAmount = amount;
-        final List<Banknote> availableBanknotesByDesc = storage.getAvailableBanknotes();
+        final List<Banknote> availableBanknotesByDesc = storage.getAvailableBanknotes().collect(Collectors.toList());
         List<Banknote> banknotes = new ArrayList<>();
         for (Banknote banknote : availableBanknotesByDesc) {
             var denomination = banknote.getDenomination();

@@ -28,7 +28,6 @@ public class CashTest extends AbstractTest {
     public void addSomeBanknotesAndReturnBanknotes() {
         var cashIn = new Cash(
                 List.of(ONE_THOUSAND, ONE_THOUSAND, SEVEN_HUNDRED));
-        var banknotes = cashIn.getBanknotes();
         assertEquals(3, cashIn.getBanknotesQuantity());
         assertEquals(2_700, cashIn.getAmount());
     }

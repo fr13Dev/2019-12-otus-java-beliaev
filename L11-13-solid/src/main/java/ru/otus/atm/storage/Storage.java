@@ -5,6 +5,7 @@ import ru.otus.atm.cashissuing.CashIssuing;
 import ru.otus.atm.exception.IllegalAmountException;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 public interface Storage {
 
@@ -14,7 +15,7 @@ public interface Storage {
 
     List<Banknote> get(int amount) throws IllegalAmountException;
 
-    List<Banknote> getAvailableBanknotes();
+    Stream<Banknote> getAvailableBanknotes();
 
     int getAvailableQuantityOfBanknote(Banknote banknote);
 

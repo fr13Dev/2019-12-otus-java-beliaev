@@ -10,11 +10,14 @@ import ru.otus.atm.recovering.backup.CellBackup;
 import ru.otus.atm.recovering.state.CellState;
 import ru.otus.atm.recovering.state.StorageState;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Stream;
 
 public class CashStorage implements Storage, Recovering<StorageState> {
-    private final Set<Cell> storage = new HashSet<>();
+    private final List<Cell> storage = new ArrayList<>();
     private final CashIssuing cashIssuing;
     private int balance;
 
@@ -53,11 +56,10 @@ public class CashStorage implements Storage, Recovering<StorageState> {
     }
 
     @Override
-    public List<Banknote> getAvailableBanknotes() {
+    public Stream<Banknote> getAvailableBanknotes() {
         return storage.stream()
                 .sorted(Comparator.comparing(Cell::getBaseBanknote, Comparator.comparingInt(Banknote::getDenomination).reversed()))
-                .map(Cell::getBaseBanknote)
-                .collect(Collectors.toList());
+                .map(Cell::getBaseBanknote);
     }
 
     @Override
@@ -68,10 +70,6 @@ public class CashStorage implements Storage, Recovering<StorageState> {
     @Override
     public int getBalance() {
         return balance;
-    }
-
-    public Set<Cell> getStorage() {
-        return Collections.unmodifiableSet(storage);
     }
 
     @Override
@@ -89,6 +87,10 @@ public class CashStorage implements Storage, Recovering<StorageState> {
     @Override
     public StorageState save() {
         return new StorageState(this);
+    }
+
+    private List<Cell> getStorage() {
+        return Collections.unmodifiableList(storage);
     }
 
     private void initStorage() {

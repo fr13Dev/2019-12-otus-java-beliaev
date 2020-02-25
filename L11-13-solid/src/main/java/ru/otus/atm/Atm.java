@@ -11,6 +11,8 @@ import ru.otus.atm.recovering.state.StorageState;
 import ru.otus.atm.storage.CashStorage;
 import ru.otus.atm.storage.Storage;
 
+import java.util.stream.Collectors;
+
 public class Atm implements Recovering<AtmState> {
     private final Storage storage;
 
@@ -26,7 +28,7 @@ public class Atm implements Recovering<AtmState> {
     }
 
     public void putCash(Cash cash) {
-        storage.put(cash.getBanknotes());
+        storage.put(cash.getBanknotes().collect(Collectors.toList()));
     }
 
     public Cash getCash(int amount) throws IllegalAmountException {

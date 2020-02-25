@@ -63,7 +63,7 @@ public class AtmTest extends AbstractTest {
         final Cash cashOut = atm.getCash(SEVEN_HUNDRED.getDenomination());
         assertEquals(SEVEN_HUNDRED.getDenomination(), cashOut.getAmount());
         assertEquals(amountInAtm - cashOut.getAmount(), atm.getCashAmount());
-        assertEquals(1, cashOut.getBanknotes().size());
+        assertEquals(1, cashOut.getBanknotes().count());
         assertEquals(1, cashOut.getBanknotesQuantity());
     }
 

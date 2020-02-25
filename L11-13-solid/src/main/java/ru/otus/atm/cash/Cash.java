@@ -1,8 +1,8 @@
 package ru.otus.atm.cash;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class Cash {
     private final List<Banknote> banknotes = new ArrayList<>();
@@ -19,8 +19,8 @@ public class Cash {
         return banknotes.stream().mapToInt(Banknote::getDenomination).sum();
     }
 
-    public List<Banknote> getBanknotes() {
-        return Collections.unmodifiableList(banknotes);
+    public Stream<Banknote> getBanknotes() {
+        return banknotes.stream();
     }
 
     public int getBanknotesQuantity() {
