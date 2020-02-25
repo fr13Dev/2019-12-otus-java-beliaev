@@ -1,25 +1,24 @@
 package ru.otus.department;
 
 import ru.otus.atm.Atm;
+import ru.otus.atm.command.TotalBalanceCommand;
 import ru.otus.atm.recovering.backup.AtmBackup;
 import ru.otus.atm.recovering.backup.Backup;
 import ru.otus.atm.recovering.state.AtmState;
-import ru.otus.department.command.Command;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class Department {
     private final List<Atm> atms = new ArrayList<>();
-    private final Command totalBalance;
-
-    public Department(Command totalBalance) {
-        this.totalBalance = totalBalance;
-    }
 
     public int getTotalBalance() {
-        return totalBalance.execute(Collections.unmodifiableList(atms));
+        int balance = 0;
+        for (Atm atm : atms) {
+            final TotalBalanceCommand command = new TotalBalanceCommand(atm);
+            balance += command.execute();
+        }
+        return balance;
     }
 
     public void addAtm(Atm atm) {

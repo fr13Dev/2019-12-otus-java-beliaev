@@ -8,14 +8,13 @@ import ru.otus.atm.cashissuing.MinimumBanknotesQuantity;
 import ru.otus.atm.exception.IllegalAmountException;
 import ru.otus.atm.recovering.backup.Backup;
 import ru.otus.atm.recovering.state.AtmState;
-import ru.otus.department.command.TotalBalanceCommand;
 
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
 public class DepartmentTest extends AbstractTest {
-    private final Department department = new Department(new TotalBalanceCommand());
+    private final Department department = new Department();
 
     @Test
     public void addOneAtmAndReturnQuantity() {
