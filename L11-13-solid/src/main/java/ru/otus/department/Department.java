@@ -31,11 +31,11 @@ public class Department {
 
     public List<Backup<AtmState>> saveAtmStates() {
         final List<Backup<AtmState>> backups = new ArrayList<>();
-        atms.forEach(i -> {
+        for (Atm i : atms) {
             final Backup<AtmState> backup = new AtmBackup();
             backup.setState(i.save());
             backups.add(backup);
-        });
+        }
         return backups;
     }
 
