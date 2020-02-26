@@ -3,9 +3,6 @@ package ru.otus.atm;
 import org.junit.Test;
 import ru.otus.atm.cash.Cash;
 import ru.otus.atm.exception.IllegalAmountException;
-import ru.otus.atm.recovering.backup.AtmBackup;
-import ru.otus.atm.recovering.backup.Backup;
-import ru.otus.atm.recovering.state.AtmState;
 
 import java.util.List;
 
@@ -112,13 +109,14 @@ public class AtmTest extends AbstractTest {
     }
 
     @Test
-    public void putSomeBanknotesForManyTimesGivePartOfThemBackAndRestoreState() throws IllegalAmountException {
+    public void testRestore() throws IllegalAmountException {
         atm.putCash(new Cash(
                 List.of(ONE_THOUSAND, SEVEN_HUNDRED)));
-        final Backup<AtmState> backup = new AtmBackup();
-        backup.setState(atm.save());
+        final Atm.Snapshot snapshot = atm.makeSnapshot();
         atm.getCash(SEVEN_HUNDRED.getDenomination() + ONE_THOUSAND.getDenomination());
-        atm.load(backup.getState());
+        snapshot.restore();
+        atm.getCash(SEVEN_HUNDRED.getDenomination());
+        snapshot.restore();
         assertEquals(1_700, atm.getCashAmount());
     }
 }

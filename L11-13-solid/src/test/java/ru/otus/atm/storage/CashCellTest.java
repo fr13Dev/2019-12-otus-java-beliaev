@@ -4,9 +4,6 @@ import org.junit.Test;
 import ru.otus.atm.AbstractTest;
 import ru.otus.atm.cash.Banknote;
 import ru.otus.atm.exception.IllegalAmountException;
-import ru.otus.atm.recovering.backup.Backup;
-import ru.otus.atm.recovering.backup.CellBackup;
-import ru.otus.atm.recovering.state.CellState;
 
 import java.util.List;
 
@@ -35,15 +32,5 @@ public class CashCellTest extends AbstractTest {
     public void addSomeBanknotesAndGetInvalidQuantity() throws IllegalAmountException {
         cell.addBanknotes(5);
         cell.getBanknotes(10);
-    }
-
-    @Test
-    public void addSomeBanknotesGetAllOfThemAndRestoreState() {
-        cell.addBanknotes(5);
-        final Backup<CellState> cellBackup = new CellBackup();
-        cellBackup.setState(((CashCell) cell).save());
-        cell.decrementBanknoteQuantity();
-        ((CashCell) cell).load(cellBackup.getState());
-        assertEquals(5, cell.getBanknotesQuantity());
     }
 }

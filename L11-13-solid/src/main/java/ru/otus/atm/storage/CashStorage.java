@@ -4,36 +4,20 @@ import ru.otus.atm.cash.Banknote;
 import ru.otus.atm.cash.Denominations;
 import ru.otus.atm.cashissuing.CashIssuing;
 import ru.otus.atm.exception.IllegalAmountException;
-import ru.otus.atm.recovering.Recovering;
-import ru.otus.atm.recovering.backup.Backup;
-import ru.otus.atm.recovering.backup.CellBackup;
-import ru.otus.atm.recovering.state.CellState;
-import ru.otus.atm.recovering.state.StorageState;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class CashStorage implements Storage, Recovering<StorageState> {
-    private final List<Cell> storage = new ArrayList<>();
-    private final CashIssuing cashIssuing;
+public class CashStorage implements Storage {
+    private List<Cell> storage = new ArrayList<>();
+    private CashIssuing cashIssuing;
     private int balance;
 
     public CashStorage(CashIssuing cashIssuing) {
         this.cashIssuing = cashIssuing;
         initStorage();
-    }
-
-    public CashStorage(CashStorage storage) {
-        this.cashIssuing = storage.getCashIssuing();
-        this.balance = storage.getBalance();
-        storage.getStorage().forEach(i -> {
-            final Backup<CellState> cellBackup = new CellBackup();
-            cellBackup.setState(new CellState((CashCell) i));
-            this.storage.add(cellBackup.getState().get());
-        });
     }
 
     @Override
@@ -77,20 +61,35 @@ public class CashStorage implements Storage, Recovering<StorageState> {
         return cashIssuing;
     }
 
-    @Override
-    public void load(StorageState state) {
-        this.balance = state.get().getBalance();
-        this.storage.clear();
-        this.storage.addAll(state.get().getStorage());
+    public Snapshot makeSnapshot() {
+        return new Snapshot(this, storage, cashIssuing, balance);
     }
 
-    @Override
-    public StorageState save() {
-        return new StorageState(this);
-    }
+    public static class Snapshot {
+        private final CashStorage cashStorage;
+        private final List<Cell> storage = new ArrayList<>();
+        private final List<CashCell.Snapshot> cellsSnapshot = new ArrayList<>();
+        private final CashIssuing cashIssuing;
+        private int balance;
 
-    private List<Cell> getStorage() {
-        return Collections.unmodifiableList(storage);
+        public Snapshot(CashStorage cashStorage, List<Cell> storage, CashIssuing cashIssuing, int balance) {
+            this.cashStorage = cashStorage;
+            for (Cell cell : storage) {
+                cellsSnapshot.add(((CashCell) cell).makeSnapshot());
+            }
+            this.storage.addAll(storage);
+            this.cashIssuing = cashIssuing;
+            this.balance = balance;
+        }
+
+        public void restore() {
+            for (CashCell.Snapshot snapshot : cellsSnapshot) {
+                snapshot.restore();
+            }
+            cashStorage.setStorage(storage);
+            cashStorage.setCashIssuing(cashIssuing);
+            cashStorage.setBalance(balance);
+        }
     }
 
     private void initStorage() {
@@ -104,6 +103,18 @@ public class CashStorage implements Storage, Recovering<StorageState> {
                 .filter(i -> i.getBaseBanknote().equals(banknote))
                 .findFirst()
                 .get();
+    }
+
+    private void setStorage(List<Cell> storage) {
+        this.storage = storage;
+    }
+
+    private void setCashIssuing(CashIssuing cashIssuing) {
+        this.cashIssuing = cashIssuing;
+    }
+
+    private void setBalance(int balance) {
+        this.balance = balance;
     }
 }
 

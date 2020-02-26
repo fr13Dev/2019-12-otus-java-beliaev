@@ -3,28 +3,16 @@ package ru.otus.atm;
 import ru.otus.atm.cash.Cash;
 import ru.otus.atm.cashissuing.CashIssuing;
 import ru.otus.atm.exception.IllegalAmountException;
-import ru.otus.atm.recovering.Recovering;
-import ru.otus.atm.recovering.backup.Backup;
-import ru.otus.atm.recovering.backup.StorageBackup;
-import ru.otus.atm.recovering.state.AtmState;
-import ru.otus.atm.recovering.state.StorageState;
 import ru.otus.atm.storage.CashStorage;
 import ru.otus.atm.storage.Storage;
 
 import java.util.stream.Collectors;
 
-public class Atm implements Recovering<AtmState> {
-    private final Storage storage;
+public class Atm {
+    private Storage storage;
 
     public Atm(CashIssuing cashIssuing) {
         storage = new CashStorage(cashIssuing);
-    }
-
-    public Atm(Atm atm) {
-        final Backup<StorageState> backup = new StorageBackup();
-        backup.setState(new StorageState((CashStorage) atm.getStorage()));
-        storage = new CashStorage(atm.getStorage().getCashIssuing());
-        ((CashStorage) storage).load(backup.getState());
     }
 
     public void putCash(Cash cash) {
@@ -39,20 +27,28 @@ public class Atm implements Recovering<AtmState> {
         return storage.getBalance();
     }
 
-    @Override
-    public void load(AtmState state) {
-        final Backup<StorageState> backup = new StorageBackup();
-        final Storage tempStorage = state.get().getStorage();
-        backup.setState(new StorageState((CashStorage) tempStorage));
-        ((CashStorage) storage).load(backup.getState());
+    public Snapshot makeSnapshot() {
+        return new Snapshot(this, storage);
     }
 
-    @Override
-    public AtmState save() {
-        return new AtmState(this);
+    public static class Snapshot {
+        private final Atm atm;
+        private final Storage storage;
+        private final CashStorage.Snapshot storageSnapshot;
+
+        public Snapshot(Atm atm, Storage storage) {
+            this.atm = atm;
+            storageSnapshot = ((CashStorage) storage).makeSnapshot();
+            this.storage = storage;
+        }
+
+        public void restore() {
+            storageSnapshot.restore();
+            atm.setStorage(storage);
+        }
     }
 
-    private Storage getStorage() {
-        return storage;
+    private void setStorage(Storage storage) {
+        this.storage = storage;
     }
 }
