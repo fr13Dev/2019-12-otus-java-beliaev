@@ -2,15 +2,13 @@ package ru.otus.atm;
 
 import org.junit.Test;
 import ru.otus.atm.cash.Cash;
-import ru.otus.atm.cashissuing.MinimumBanknotesQuantity;
 import ru.otus.atm.exception.IllegalAmountException;
 
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class ATMTest extends AbstractTest {
-    private final ATM atm = new ATM(new MinimumBanknotesQuantity());
+public class AtmTest extends AbstractTest {
 
     @Test
     public void putOneBanknoteAndReturnCashAmount() {
@@ -62,7 +60,7 @@ public class ATMTest extends AbstractTest {
         final Cash cashOut = atm.getCash(SEVEN_HUNDRED.getDenomination());
         assertEquals(SEVEN_HUNDRED.getDenomination(), cashOut.getAmount());
         assertEquals(amountInAtm - cashOut.getAmount(), atm.getCashAmount());
-        assertEquals(1, cashOut.getBanknotes().size());
+        assertEquals(1, cashOut.getBanknotes().count());
         assertEquals(1, cashOut.getBanknotesQuantity());
     }
 
@@ -108,5 +106,17 @@ public class ATMTest extends AbstractTest {
                 List.of(ONE_THOUSAND, SEVEN_HUNDRED));
         atm.putCash(cashIn);
         atm.getCash(SEVEN_HUNDRED.getDenomination() * 2);
+    }
+
+    @Test
+    public void testRestore() throws IllegalAmountException {
+        atm.putCash(new Cash(
+                List.of(ONE_THOUSAND, SEVEN_HUNDRED)));
+        final Atm.Snapshot snapshot = atm.makeSnapshot();
+        atm.getCash(SEVEN_HUNDRED.getDenomination() + ONE_THOUSAND.getDenomination());
+        snapshot.restore();
+        atm.getCash(SEVEN_HUNDRED.getDenomination());
+        snapshot.restore();
+        assertEquals(1_700, atm.getCashAmount());
     }
 }

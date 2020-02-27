@@ -54,4 +54,26 @@ public class CashCell implements Cell {
         }
         return banknotes;
     }
+
+    public Snapshot makeSnapshot() {
+        return new Snapshot(this, quantity);
+    }
+
+    public static class Snapshot {
+        private final CashCell cashCell;
+        private final int quantity;
+
+        public Snapshot(CashCell cashCell, int quantity) {
+            this.cashCell = cashCell;
+            this.quantity = quantity;
+        }
+
+        public void restore() {
+            cashCell.setQuantity(quantity);
+        }
+    }
+
+    private void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 }
