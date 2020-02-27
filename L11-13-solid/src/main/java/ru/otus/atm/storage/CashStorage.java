@@ -12,8 +12,7 @@ import java.util.stream.Stream;
 
 public class CashStorage implements Storage {
     private List<Cell> storage = new ArrayList<>();
-    private CashIssuing cashIssuing;
-    private int balance;
+    private final CashIssuing cashIssuing;
 
     public CashStorage(CashIssuing cashIssuing) {
         this.cashIssuing = cashIssuing;
@@ -23,7 +22,6 @@ public class CashStorage implements Storage {
     @Override
     public void put(Banknote banknote) {
         getCell(banknote).addBanknote();
-        balance += banknote.getDenomination();
     }
 
     @Override
@@ -35,7 +33,6 @@ public class CashStorage implements Storage {
     public List<Banknote> get(int amount) throws IllegalAmountException {
         var banknotes = cashIssuing.getBanknotes(this, amount);
         banknotes.forEach(banknote -> getCell(banknote).decrementBanknoteQuantity());
-        balance -= banknotes.stream().mapToInt(Banknote::getDenomination).sum();
         return banknotes;
     }
 
@@ -53,7 +50,9 @@ public class CashStorage implements Storage {
 
     @Override
     public int getBalance() {
-        return balance;
+        return storage.stream()
+                .mapToInt(i -> i.getBaseBanknote().getDenomination() * i.getBanknotesQuantity())
+                .sum();
     }
 
     @Override
@@ -62,24 +61,20 @@ public class CashStorage implements Storage {
     }
 
     public Snapshot makeSnapshot() {
-        return new Snapshot(this, storage, cashIssuing, balance);
+        return new Snapshot(this, storage);
     }
 
     public static class Snapshot {
         private final CashStorage cashStorage;
         private final List<Cell> storage = new ArrayList<>();
         private final List<CashCell.Snapshot> cellsSnapshot = new ArrayList<>();
-        private final CashIssuing cashIssuing;
-        private int balance;
 
-        public Snapshot(CashStorage cashStorage, List<Cell> storage, CashIssuing cashIssuing, int balance) {
+        public Snapshot(CashStorage cashStorage, List<Cell> storage) {
             this.cashStorage = cashStorage;
             for (Cell cell : storage) {
                 cellsSnapshot.add(((CashCell) cell).makeSnapshot());
             }
             this.storage.addAll(storage);
-            this.cashIssuing = cashIssuing;
-            this.balance = balance;
         }
 
         public void restore() {
@@ -87,8 +82,6 @@ public class CashStorage implements Storage {
                 snapshot.restore();
             }
             cashStorage.setStorage(storage);
-            cashStorage.setCashIssuing(cashIssuing);
-            cashStorage.setBalance(balance);
         }
     }
 
@@ -107,14 +100,6 @@ public class CashStorage implements Storage {
 
     private void setStorage(List<Cell> storage) {
         this.storage = storage;
-    }
-
-    private void setCashIssuing(CashIssuing cashIssuing) {
-        this.cashIssuing = cashIssuing;
-    }
-
-    private void setBalance(int balance) {
-        this.balance = balance;
     }
 }
 
