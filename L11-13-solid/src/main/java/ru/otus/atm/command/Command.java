@@ -1,7 +1,9 @@
 package ru.otus.atm.command;
 
+import ru.otus.atm.Atm;
+
 @FunctionalInterface
 public interface Command {
 
-    int execute();
+    int execute(Atm atm);
 }
