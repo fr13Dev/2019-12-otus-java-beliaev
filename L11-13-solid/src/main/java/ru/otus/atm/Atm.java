@@ -2,6 +2,7 @@ package ru.otus.atm;
 
 import ru.otus.atm.cash.Cash;
 import ru.otus.atm.cashissuing.CashIssuing;
+import ru.otus.atm.command.Command;
 import ru.otus.atm.exception.IllegalAmountException;
 import ru.otus.atm.storage.CashStorage;
 import ru.otus.atm.storage.Storage;
@@ -29,6 +30,10 @@ public class Atm {
 
     public Snapshot makeSnapshot() {
         return new Snapshot(this, storage);
+    }
+
+    public <T> T executeCommand(Command<T> command) {
+        return command.execute(this);
     }
 
     public static class Snapshot {

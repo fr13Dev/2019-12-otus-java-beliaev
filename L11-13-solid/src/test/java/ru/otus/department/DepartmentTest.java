@@ -5,6 +5,7 @@ import ru.otus.atm.AbstractTest;
 import ru.otus.atm.Atm;
 import ru.otus.atm.cash.Cash;
 import ru.otus.atm.cashissuing.MinimumBanknotesQuantity;
+import ru.otus.atm.exception.IllegalAmountException;
 
 import java.util.List;
 
@@ -39,5 +40,20 @@ public class DepartmentTest extends AbstractTest {
         newAtm.putCash(new Cash(List.of(ONE_THOUSAND)));
         department.addAtm(newAtm);
         assertEquals(2_700, department.getTotalBalance());
+    }
+
+    @Test
+    public void addSomeAtmsPutCashMakeSnapshotsGetCashAndRestoreStates() throws IllegalAmountException {
+        atm.putCash(new Cash(List.of(ONE_THOUSAND, SEVEN_HUNDRED)));
+        department.addAtm(atm);
+        final Atm newAtm = new Atm(new MinimumBanknotesQuantity());
+        newAtm.putCash(new Cash(List.of(ONE_THOUSAND)));
+        department.addAtm(newAtm);
+        final List<Atm.Snapshot> snapshots = department.atmsSnapshots();
+        atm.getCash(SEVEN_HUNDRED.getDenomination());
+        newAtm.getCash(ONE_THOUSAND.getDenomination());
+        snapshots.forEach(Atm.Snapshot::restore);
+        assertEquals(1_700, atm.getCashAmount());
+        assertEquals(1_000, newAtm.getCashAmount());
     }
 }

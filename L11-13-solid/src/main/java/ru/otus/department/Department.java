@@ -1,7 +1,6 @@
 package ru.otus.department;
 
 import ru.otus.atm.Atm;
-import ru.otus.atm.command.GetBalanceCommand;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,10 +11,17 @@ public class Department {
     public int getTotalBalance() {
         int balance = 0;
         for (Atm atm : atms) {
-            final GetBalanceCommand command = new GetBalanceCommand();
-            balance += command.execute(atm);
+            balance += atm.executeCommand(Atm::getCashAmount);
         }
         return balance;
+    }
+
+    public List<Atm.Snapshot> atmsSnapshots() {
+        List<Atm.Snapshot> snapshots = new ArrayList<>();
+        for (Atm atm : atms) {
+            snapshots.add(atm.executeCommand(Atm::makeSnapshot));
+        }
+        return snapshots;
     }
 
     public void addAtm(Atm atm) {
