@@ -15,6 +15,8 @@
 
     <properties>
         <com.google.code.gson>2.8.5</com.google.code.gson>
+        <javax.json-api>1.1.4</javax.json-api>
+        <javax.json.version>1.1.4</javax.json.version>
     </properties>
 
     <dependencies>
@@ -22,6 +24,18 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>${com.google.code.gson}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.json</groupId>
+            <artifactId>javax.json-api</artifactId>
+            <version>${javax.json-api}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.json</artifactId>
+            <version>${javax.json.version}</version>
         </dependency>
 
         <dependency>

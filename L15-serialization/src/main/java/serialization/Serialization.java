@@ -2,5 +2,5 @@ package serialization;
 
 public interface Serialization {
 
-    <T> String toJson(T object);
+    String toJson(Object src);
 }
