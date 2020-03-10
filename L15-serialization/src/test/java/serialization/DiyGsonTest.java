@@ -88,4 +88,18 @@ public class DiyGsonTest {
         final NullType fromJson = gson.fromJson(json, NullType.class);
         assertNull(fromJson);
     }
+
+    @Test
+    public void serializePrimitives(){
+        assertEquals(gson.toJson(true), serialization.toJson(true));
+        assertEquals(gson.toJson(false), serialization.toJson(false));
+        assertEquals(gson.toJson((byte)1), serialization.toJson((byte)1));
+        assertEquals(gson.toJson((short)2f), serialization.toJson((short)2f));
+        assertEquals(gson.toJson(3), serialization.toJson(3));
+        assertEquals(gson.toJson(4L), serialization.toJson(4L));
+        assertEquals(gson.toJson(5f), serialization.toJson(5f));
+        assertEquals(gson.toJson(6d), serialization.toJson(6d));
+        assertEquals(gson.toJson("aaa"), serialization.toJson("aaa"));
+        assertEquals(gson.toJson('b'), serialization.toJson('b'));
+    }
 }
