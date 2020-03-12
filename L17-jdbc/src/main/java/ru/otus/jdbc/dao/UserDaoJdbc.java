@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import ru.otus.core.dao.UserDao;
 import ru.otus.core.dao.UserDaoException;
 import ru.otus.core.model.User;
+import ru.otus.core.reflection.SqlGenerator;
 import ru.otus.core.sessionmanager.SessionManager;
 import ru.otus.jdbc.DBExecutor;
 import ru.otus.jdbc.sessionmanager.SessionManagerJdbc;
@@ -18,6 +19,7 @@ public class UserDaoJdbc implements UserDao {
     private final static Logger logger = LoggerFactory.getLogger(UserDaoJdbc.class);
     private final SessionManagerJdbc sessionManager;
     private final DBExecutor<User> dbExecutor;
+    private final SqlGenerator<User> sqlGenerator = new SqlGenerator<>(User.class);
 
     public UserDaoJdbc(SessionManagerJdbc sessionManager, DBExecutor<User> dbExecutor) {
         this.sessionManager = sessionManager;
@@ -28,7 +30,7 @@ public class UserDaoJdbc implements UserDao {
     @Override
     public Optional<User> findById(long id) {
         try {
-            return dbExecutor.selectRecord(getConnection(), "select id, name, age from user where id  = ?", id, resultSet -> {
+            return dbExecutor.selectRecord(getConnection(), sqlGenerator.getSelectQuery(), id, resultSet -> {
                 try {
                     if (resultSet.next()) {
                         return new User(resultSet.getLong(1), resultSet.getString("name"), resultSet.getInt("age"));
@@ -47,7 +49,7 @@ public class UserDaoJdbc implements UserDao {
     @Override
     public long save(User user) {
         try {
-            return dbExecutor.insertRecord(getConnection(), "insert into user(name, age) values (?,?)", List.of(user.getName(), String.valueOf(user.getAge())));
+            return dbExecutor.insertRecord(getConnection(), sqlGenerator.getInsertQuery(), List.of(user.getName(), String.valueOf(user.getAge())));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             throw new UserDaoException(e);
