@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class SqlGenerator<T> {
+    private static final String INSERT_QUERY = "INSERT INTO %s(%s) VALUES(%s)";
+    private static final String SELECT_QUERY = "SELECT %s FROM %s WHERE %s= ?";
     private final Reflection<T> reflection;
 
     public SqlGenerator(Class<T> clazz) {
@@ -14,25 +16,19 @@ public class SqlGenerator<T> {
     }
 
     public String getInsertQuery() {
-        var builder = new StringBuilder();
-        return builder.append("insert into ")
-                .append(getTableName())
-                .append("(")
-                .append(concatFieldNames(reflection.getFieldNames().filter(getFilterByNonAnnotatedFields()), Field::getName))
-                .append(") values(")
-                .append(concatFieldNames(reflection.getFieldNames().filter(getFilterByNonAnnotatedFields()), f -> "?"))
-                .append(")").toString();
+        return String.format(
+                INSERT_QUERY,
+                getTableName(),
+                concatFieldNames(reflection.getFieldNames().filter(getFilterByNonAnnotatedFields()), Field::getName),
+                concatFieldNames(reflection.getFieldNames().filter(getFilterByNonAnnotatedFields()), f -> "?"));
     }
 
     public String getSelectQuery() {
-        var builder = new StringBuilder();
-        return builder.append("select ")
-                .append(concatFieldNames(reflection.getFieldNames(), Field::getName))
-                .append(" from ")
-                .append(getTableName())
-                .append(" where ")
-                .append(concatFieldNames(reflection.getFieldNames().filter(getFilterByAnnotatedFields()), Field::getName))
-                .append("= ?").toString();
+        return String.format(
+                SELECT_QUERY,
+                concatFieldNames(reflection.getFieldNames(), Field::getName),
+                getTableName(),
+                concatFieldNames(reflection.getFieldNames().filter(getFilterByAnnotatedFields()), Field::getName));
     }
 
     private String getTableName() {

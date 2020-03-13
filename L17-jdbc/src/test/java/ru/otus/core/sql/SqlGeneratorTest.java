@@ -7,10 +7,10 @@ import ru.otus.core.model.User;
 import static org.junit.Assert.assertEquals;
 
 public class SqlGeneratorTest {
-    private static final String SELECT_USER = "select id,name,age from user where id= ?";
-    private static final String INSERT_USER = "insert into user(name,age) values(?,?)";
-    private static final String SELECT_ACCOUNT = "select id,type,rest from account where id= ?";
-    private static final String INSERT_ACCOUNT = "insert into account(type,rest) values(?,?)";
+    private static final String SELECT_USER = "SELECT id,name,age FROM user WHERE id= ?";
+    private static final String INSERT_USER = "INSERT INTO user(name,age) VALUES(?,?)";
+    private static final String SELECT_ACCOUNT = "SELECT id,type,rest FROM account WHERE id= ?";
+    private static final String INSERT_ACCOUNT = "INSERT INTO account(type,rest) VALUES(?,?)";
     private static final SqlGenerator<User> sqlGeneratorUser = new SqlGenerator<>(User.class);
     private static final SqlGenerator<Account> sqlGeneratorAccount = new SqlGenerator<>(Account.class);
 
