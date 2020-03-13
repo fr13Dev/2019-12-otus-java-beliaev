@@ -3,7 +3,7 @@ package ru.otus.core.service;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import ru.otus.core.dao.UserDao;
+import ru.otus.core.dao.Dao;
 import ru.otus.core.model.User;
 import ru.otus.h2.DataSourceH2;
 import ru.otus.jdbc.DBExecutor;
@@ -22,8 +22,8 @@ public class DBServiceUserImplTest {
     private final DataSource dataSource = new DataSourceH2();
     private final SessionManagerJdbc sessionManager = new SessionManagerJdbc(dataSource);
     private final DBExecutor<User> dbExecutor = new DBExecutor<>();
-    private final UserDao userDao = new UserDaoJdbc(sessionManager, dbExecutor);
-    private final DBServiceUser dbServiceUser = new DBServiceUserImpl(userDao);
+    private final Dao<User> userDao = new UserDaoJdbc(sessionManager, dbExecutor);
+    private final DBService<User> dbServiceUser = new DBServiceUserImpl(userDao);
     private final User user = new User(1, "user1", 30);
 
     @Before
@@ -32,20 +32,12 @@ public class DBServiceUserImplTest {
              PreparedStatement pst = connection.prepareStatement("create table user(id long(20) auto_increment NOT NULL, name varchar(255), age int(3))")) {
             pst.executeUpdate();
         }
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement pst = connection.prepareStatement("create table account(id long(20) auto_increment NOT NULL, type varchar(255), rest int)")) {
-            pst.executeUpdate();
-        }
     }
 
     @After
     public void dropTables() throws SQLException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement pst = connection.prepareStatement("drop table user")) {
-            pst.executeUpdate();
-        }
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement pst = connection.prepareStatement("drop table account")) {
             pst.executeUpdate();
         }
     }

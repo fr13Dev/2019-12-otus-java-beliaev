@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.core.dao.Dao;
 import ru.otus.core.dao.DaoException;
-import ru.otus.core.model.User;
+import ru.otus.core.model.Account;
 import ru.otus.core.sessionmanager.SessionManager;
 import ru.otus.core.sql.SqlGenerator;
 import ru.otus.jdbc.DBExecutor;
@@ -15,24 +15,24 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-public class UserDaoJdbc implements Dao<User> {
-    private static final Logger logger = LoggerFactory.getLogger(UserDaoJdbc.class);
+public class AccountDaoJdbc implements Dao<Account> {
+    private static final Logger logger = LoggerFactory.getLogger(AccountDaoJdbc.class);
     private final SessionManagerJdbc sessionManager;
-    private final DBExecutor<User> dbExecutor;
-    private final SqlGenerator<User> sqlGenerator = new SqlGenerator<>(User.class);
+    private final DBExecutor<Account> dbExecutor;
+    private final SqlGenerator<Account> sqlGenerator = new SqlGenerator<>(Account.class);
 
-    public UserDaoJdbc(SessionManagerJdbc sessionManager, DBExecutor<User> dbExecutor) {
+    public AccountDaoJdbc(SessionManagerJdbc sessionManager, DBExecutor<Account> dbExecutor) {
         this.sessionManager = sessionManager;
         this.dbExecutor = dbExecutor;
     }
 
     @Override
-    public Optional<User> findById(long id) {
+    public Optional<Account> findById(long id) {
         try {
             return dbExecutor.selectRecord(getConnection(), sqlGenerator.getSelectQuery(), id, resultSet -> {
                 try {
                     if (resultSet.next()) {
-                        return new User(resultSet.getLong(1), resultSet.getString("name"), resultSet.getInt("age"));
+                        return new Account(resultSet.getLong(1), resultSet.getString("type"), resultSet.getInt("rest"));
                     }
                 } catch (SQLException e) {
                     logger.error(e.getMessage(), e);
@@ -46,9 +46,9 @@ public class UserDaoJdbc implements Dao<User> {
     }
 
     @Override
-    public long save(User user) {
+    public long save(Account account) {
         try {
-            return dbExecutor.insertRecord(getConnection(), sqlGenerator.getInsertQuery(), List.of(user.getName(), String.valueOf(user.getAge())));
+            return dbExecutor.insertRecord(getConnection(), sqlGenerator.getInsertQuery(), List.of(account.getType(), String.valueOf(account.getRest())));
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
             throw new DaoException(e);

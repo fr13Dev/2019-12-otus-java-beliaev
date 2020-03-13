@@ -3,27 +3,27 @@ package ru.otus.core.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.core.dao.Dao;
-import ru.otus.core.model.User;
+import ru.otus.core.model.Account;
 import ru.otus.core.sessionmanager.SessionManager;
 
 import java.util.Optional;
 
-public class DBServiceUserImpl implements DBService<User> {
-    private static final Logger logger = LoggerFactory.getLogger(DBServiceUserImpl.class);
-    private final Dao<User> userDao;
+public class DBServiceAccountImpl implements DBService<Account> {
+    private static final Logger logger = LoggerFactory.getLogger(DBServiceAccountImpl.class);
+    private final Dao<Account> accountDao;
 
-    public DBServiceUserImpl(Dao<User> userDao) {
-        this.userDao = userDao;
+    public DBServiceAccountImpl(Dao<Account> accountDao) {
+        this.accountDao = accountDao;
     }
 
     @Override
-    public long save(User user) {
-        try (SessionManager sessionManager = userDao.getSessionManager()) {
+    public long save(Account account) {
+        try (SessionManager sessionManager = accountDao.getSessionManager()) {
             sessionManager.beginSession();
             try {
-                var id = userDao.save(user);
+                var id = accountDao.save(account);
                 sessionManager.commitSession();
-                logger.info("user saved {}", user);
+                logger.info("account saved {}", account);
                 return id;
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
@@ -34,14 +34,14 @@ public class DBServiceUserImpl implements DBService<User> {
     }
 
     @Override
-    public Optional<User> getById(long id) {
-        try (SessionManager sessionManager = userDao.getSessionManager()) {
+    public Optional<Account> getById(long id) {
+        try (SessionManager sessionManager = accountDao.getSessionManager()) {
             sessionManager.beginSession();
             try {
-                var optionalUser = userDao.findById(id);
+                var optionalAccount = accountDao.findById(id);
                 sessionManager.commitSession();
-                logger.info("user: {}", optionalUser.orElse(null));
-                return optionalUser;
+                logger.info("account: {}", optionalAccount.orElse(null));
+                return optionalAccount;
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
                 sessionManager.rollbackSession();
