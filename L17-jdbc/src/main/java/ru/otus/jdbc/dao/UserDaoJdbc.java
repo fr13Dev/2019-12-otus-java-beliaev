@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import ru.otus.core.dao.UserDao;
 import ru.otus.core.dao.UserDaoException;
 import ru.otus.core.model.User;
-import ru.otus.core.reflection.SqlGenerator;
 import ru.otus.core.sessionmanager.SessionManager;
+import ru.otus.core.sql.SqlGenerator;
 import ru.otus.jdbc.DBExecutor;
 import ru.otus.jdbc.sessionmanager.SessionManagerJdbc;
 
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class UserDaoJdbc implements UserDao {
-    private final static Logger logger = LoggerFactory.getLogger(UserDaoJdbc.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserDaoJdbc.class);
     private final SessionManagerJdbc sessionManager;
     private final DBExecutor<User> dbExecutor;
     private final SqlGenerator<User> sqlGenerator = new SqlGenerator<>(User.class);
@@ -50,7 +50,7 @@ public class UserDaoJdbc implements UserDao {
     public long save(User user) {
         try {
             return dbExecutor.insertRecord(getConnection(), sqlGenerator.getInsertQuery(), List.of(user.getName(), String.valueOf(user.getAge())));
-        } catch (Exception e) {
+        } catch (SQLException e) {
             logger.error(e.getMessage(), e);
             throw new UserDaoException(e);
         }

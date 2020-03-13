@@ -27,21 +27,27 @@ public class DBServiceUserImplTest {
     private final User user = new User(1, "user1", 30);
 
     @Before
-    public void createTable() throws SQLException {
+    public void createTables() throws SQLException {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement pst = connection.prepareStatement("create table user(id long(20) auto_increment, name varchar(255), age int(3))")) {
+             PreparedStatement pst = connection.prepareStatement("create table user(id long(20) auto_increment NOT NULL, name varchar(255), age int(3))")) {
             pst.executeUpdate();
         }
-        System.out.println("table created");
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement pst = connection.prepareStatement("create table account(id long(20) auto_increment NOT NULL, type varchar(255), rest int)")) {
+            pst.executeUpdate();
+        }
     }
 
     @After
-    public void dropTable() throws SQLException {
+    public void dropTables() throws SQLException {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement pst = connection.prepareStatement("drop table user")) {
             pst.executeUpdate();
         }
-        System.out.println("table created");
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement pst = connection.prepareStatement("drop table account")) {
+            pst.executeUpdate();
+        }
     }
 
     @Test

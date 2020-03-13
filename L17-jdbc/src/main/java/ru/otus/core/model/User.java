@@ -1,6 +1,9 @@
 package ru.otus.core.model;
 
+import ru.otus.core.sql.Id;
+
 public class User {
+    @Id
     private final long id;
     private final String name;
     private int age;

@@ -1,4 +1,4 @@
-package ru.otus.core.reflection;
+package ru.otus.core.sql;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -15,7 +15,7 @@ public class Reflection<T> {
         return clazz.getSimpleName();
     }
 
-    public Stream<String> getFieldsNames() {
-        return Arrays.stream(clazz.getDeclaredFields()).map(Field::getName);
+    public Stream<Field> getFieldNames() {
+        return Arrays.stream(clazz.getDeclaredFields());
     }
 }
