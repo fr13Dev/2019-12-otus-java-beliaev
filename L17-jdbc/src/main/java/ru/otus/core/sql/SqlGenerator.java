@@ -6,7 +6,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class SqlGenerator<T> {
+public class SqlGenerator<T> implements JdbcMapper {
     private static final String INSERT_QUERY = "INSERT INTO %s(%s) VALUES(%s)";
     private static final String SELECT_QUERY = "SELECT %s FROM %s WHERE %s= ?";
     private final Reflection<T> reflection;
@@ -15,20 +15,22 @@ public class SqlGenerator<T> {
         reflection = new Reflection<>(clazz);
     }
 
+    @Override
     public String getInsertQuery() {
         return String.format(
                 INSERT_QUERY,
                 getTableName(),
-                concatFieldNames(reflection.getFieldNames().filter(getFilterByNonAnnotatedFields()), Field::getName),
-                concatFieldNames(reflection.getFieldNames().filter(getFilterByNonAnnotatedFields()), f -> "?"));
+                concatFieldNames(reflection.getFieldNames().filter(getFilterForNotAutoIncrementFields()), Field::getName),
+                concatFieldNames(reflection.getFieldNames().filter(getFilterForNotAutoIncrementFields()), f -> "?"));
     }
 
+    @Override
     public String getSelectQuery() {
         return String.format(
                 SELECT_QUERY,
                 concatFieldNames(reflection.getFieldNames(), Field::getName),
                 getTableName(),
-                concatFieldNames(reflection.getFieldNames().filter(getFilterByAnnotatedFields()), Field::getName));
+                concatFieldNames(reflection.getFieldNames().filter(getFilterForUniqueField()), Field::getName));
     }
 
     private String getTableName() {
@@ -39,11 +41,11 @@ public class SqlGenerator<T> {
         return stream.map(mapper).collect(Collectors.joining(","));
     }
 
-    private Predicate<? super Field> getFilterByNonAnnotatedFields() {
+    private Predicate<? super Field> getFilterForNotAutoIncrementFields() {
         return field -> !field.isAnnotationPresent(Id.class);
     }
 
-    private Predicate<? super Field> getFilterByAnnotatedFields() {
+    private Predicate<? super Field> getFilterForUniqueField() {
         return field -> field.isAnnotationPresent(Id.class);
     }
 }

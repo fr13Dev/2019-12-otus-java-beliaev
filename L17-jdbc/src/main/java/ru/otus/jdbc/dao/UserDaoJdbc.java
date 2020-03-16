@@ -6,7 +6,7 @@ import ru.otus.core.dao.Dao;
 import ru.otus.core.dao.DaoException;
 import ru.otus.core.model.User;
 import ru.otus.core.sessionmanager.SessionManager;
-import ru.otus.core.sql.SqlGenerator;
+import ru.otus.core.sql.JdbcMapper;
 import ru.otus.jdbc.DBExecutor;
 import ru.otus.jdbc.sessionmanager.SessionManagerJdbc;
 
@@ -19,20 +19,21 @@ public class UserDaoJdbc implements Dao<User> {
     private static final Logger logger = LoggerFactory.getLogger(UserDaoJdbc.class);
     private final SessionManagerJdbc sessionManager;
     private final DBExecutor<User> dbExecutor;
-    private final SqlGenerator<User> sqlGenerator = new SqlGenerator<>(User.class);
+    private final JdbcMapper jdbcMapper;
 
-    public UserDaoJdbc(SessionManagerJdbc sessionManager, DBExecutor<User> dbExecutor) {
+    public UserDaoJdbc(SessionManagerJdbc sessionManager, DBExecutor<User> dbExecutor, JdbcMapper jdbcMapper) {
         this.sessionManager = sessionManager;
         this.dbExecutor = dbExecutor;
+        this.jdbcMapper = jdbcMapper;
     }
 
     @Override
     public Optional<User> findById(long id) {
         try {
-            return dbExecutor.selectRecord(getConnection(), sqlGenerator.getSelectQuery(), id, resultSet -> {
+            return dbExecutor.selectRecord(getConnection(), jdbcMapper.getSelectQuery(), id, resultSet -> {
                 try {
                     if (resultSet.next()) {
-                        return new User(resultSet.getLong(1), resultSet.getString("name"), resultSet.getInt("age"));
+                        return new User(resultSet.getLong("id"), resultSet.getString("name"), resultSet.getInt("age"));
                     }
                 } catch (SQLException e) {
                     logger.error(e.getMessage(), e);
@@ -48,7 +49,7 @@ public class UserDaoJdbc implements Dao<User> {
     @Override
     public long save(User user) {
         try {
-            return dbExecutor.insertRecord(getConnection(), sqlGenerator.getInsertQuery(), List.of(user.getName(), String.valueOf(user.getAge())));
+            return dbExecutor.insertRecord(getConnection(), jdbcMapper.getInsertQuery(), List.of(user.getName(), String.valueOf(user.getAge())));
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
             throw new DaoException(e);

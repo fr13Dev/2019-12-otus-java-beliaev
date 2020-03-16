@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import ru.otus.core.dao.Dao;
 import ru.otus.core.model.User;
+import ru.otus.core.sql.SqlGenerator;
 import ru.otus.h2.DataSourceH2;
 import ru.otus.jdbc.DBExecutor;
 import ru.otus.jdbc.dao.UserDaoJdbc;
@@ -22,7 +23,7 @@ public class DBServiceUserImplTest {
     private final DataSource dataSource = new DataSourceH2();
     private final SessionManagerJdbc sessionManager = new SessionManagerJdbc(dataSource);
     private final DBExecutor<User> dbExecutor = new DBExecutor<>();
-    private final Dao<User> userDao = new UserDaoJdbc(sessionManager, dbExecutor);
+    private final Dao<User> userDao = new UserDaoJdbc(sessionManager, dbExecutor, new SqlGenerator<>(User.class));
     private final DBService<User> dbServiceUser = new DBServiceUserImpl(userDao);
     private final User user = new User(1, "user1", 30);
 

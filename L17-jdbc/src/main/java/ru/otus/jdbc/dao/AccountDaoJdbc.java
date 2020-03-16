@@ -6,7 +6,7 @@ import ru.otus.core.dao.Dao;
 import ru.otus.core.dao.DaoException;
 import ru.otus.core.model.Account;
 import ru.otus.core.sessionmanager.SessionManager;
-import ru.otus.core.sql.SqlGenerator;
+import ru.otus.core.sql.JdbcMapper;
 import ru.otus.jdbc.DBExecutor;
 import ru.otus.jdbc.sessionmanager.SessionManagerJdbc;
 
@@ -19,20 +19,21 @@ public class AccountDaoJdbc implements Dao<Account> {
     private static final Logger logger = LoggerFactory.getLogger(AccountDaoJdbc.class);
     private final SessionManagerJdbc sessionManager;
     private final DBExecutor<Account> dbExecutor;
-    private final SqlGenerator<Account> sqlGenerator = new SqlGenerator<>(Account.class);
+    private final JdbcMapper jdbcMapper;
 
-    public AccountDaoJdbc(SessionManagerJdbc sessionManager, DBExecutor<Account> dbExecutor) {
+    public AccountDaoJdbc(SessionManagerJdbc sessionManager, DBExecutor<Account> dbExecutor, JdbcMapper jdbcMapper) {
         this.sessionManager = sessionManager;
         this.dbExecutor = dbExecutor;
+        this.jdbcMapper = jdbcMapper;
     }
 
     @Override
     public Optional<Account> findById(long id) {
         try {
-            return dbExecutor.selectRecord(getConnection(), sqlGenerator.getSelectQuery(), id, resultSet -> {
+            return dbExecutor.selectRecord(getConnection(), jdbcMapper.getSelectQuery(), id, resultSet -> {
                 try {
                     if (resultSet.next()) {
-                        return new Account(resultSet.getLong(1), resultSet.getString("type"), resultSet.getInt("rest"));
+                        return new Account(resultSet.getLong("id"), resultSet.getString("type"), resultSet.getInt("rest"));
                     }
                 } catch (SQLException e) {
                     logger.error(e.getMessage(), e);
@@ -48,7 +49,7 @@ public class AccountDaoJdbc implements Dao<Account> {
     @Override
     public long save(Account account) {
         try {
-            return dbExecutor.insertRecord(getConnection(), sqlGenerator.getInsertQuery(), List.of(account.getType(), String.valueOf(account.getRest())));
+            return dbExecutor.insertRecord(getConnection(), jdbcMapper.getInsertQuery(), List.of(account.getType(), String.valueOf(account.getRest())));
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
             throw new DaoException(e);
