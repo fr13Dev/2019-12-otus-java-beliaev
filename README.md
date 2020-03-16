@@ -12,4 +12,5 @@
 * **L08-aop** - базовая реализация AOP парадигмы
 * **L09-annotations** - работа с аннотациями и рефлексией
 * **L11-13-solid** - построение архитектуры приложения по принципам ООП
-* **L15-serialization** - json сериализатор 
+* **L15-serialization** - json сериализатор
+* **L17-jdbc** - custom orm implementation 
