@@ -14,10 +14,10 @@ public class User {
     private long id;
     @Column(name = "name", nullable = false)
     private String name;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id", nullable = false)
     private AddressDataSet address;
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<PhoneDataSet> phones = new ArrayList<>();
 
     public User(long id, String name, AddressDataSet address) {

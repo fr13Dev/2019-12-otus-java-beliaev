@@ -11,7 +11,7 @@ public class AddressDataSet {
     private long id;
     @Column(name = "street", nullable = false)
     private String street;
-    @OneToOne(mappedBy = "address")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "address")
     private User owner;
 
     public AddressDataSet(String street) {

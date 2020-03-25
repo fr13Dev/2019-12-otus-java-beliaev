@@ -17,7 +17,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class HibernateTest {
     private static final String HIBERNATE_CFG_XML_FILE_RESOURCE = "hibernate-test.cfg.xml";
-    private static final String ID = "id";
     private static final String NAME = "name";
     private static final String ADDRESS = "address";
     private static final String NUMBER = "number";
@@ -51,10 +50,10 @@ public class HibernateTest {
     public void saveUser() {
         var id = dbServiceUser.saveUser(user);
         var loadedUser = loadUser(id);
-        assertThat(loadedUser).isNotNull().isEqualToComparingOnlyGivenFields(user, ID, NAME, ADDRESS);
+        assertThat(loadedUser).isNotNull().isEqualToComparingOnlyGivenFields(user, NAME, ADDRESS);
         loadedUser.getPhones().forEach(i -> {
             var index = user.getPhones().indexOf(i);
-            assertThat(i).isEqualToComparingOnlyGivenFields(user.getPhones().get(index), ID, NUMBER);
+            assertThat(i).isEqualToComparingOnlyGivenFields(user.getPhones().get(index), NUMBER);
         });
     }
 
