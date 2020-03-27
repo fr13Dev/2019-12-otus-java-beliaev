@@ -15,3 +15,4 @@
 * **L15-serialization** - json сериализатор
 * **L17-jdbc** - custom orm implementation
 * **L19-hibernate** - hibernate
+* **L21-cache** - реализация кэша на основе WeakHashMap
