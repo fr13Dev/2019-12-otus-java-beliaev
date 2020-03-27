@@ -13,4 +13,5 @@
 * **L09-annotations** - работа с аннотациями и рефлексией
 * **L11-13-solid** - построение архитектуры приложения по принципам ООП
 * **L15-serialization** - json сериализатор
-* **L17-jdbc** - custom orm implementation 
+* **L17-jdbc** - custom orm implementation
+* **L19-hibernate** - hibernate
