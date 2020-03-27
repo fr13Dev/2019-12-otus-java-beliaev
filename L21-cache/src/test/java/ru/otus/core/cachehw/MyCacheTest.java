@@ -11,7 +11,7 @@ class MyCacheTest {
     private static final int SIZE = 1_000;
 
     @Test
-    @DisplayName(" должен проверить наличие объекта в кэше до gc и отсутствие объекта в кэше после gc")
+    @DisplayName(" проверить наличие объекта в кэше до gc и отсутствие объекта в кэше после gc")
     public void shouldCheckObjectAvailabilityBeforeGcAndCheckObjectFailureAfterGc() {
         for (int i = 0; i < SIZE; i++) {
             cache.put((long) i, new User());
@@ -24,7 +24,7 @@ class MyCacheTest {
     }
 
     @Test
-    @DisplayName(" должен добавить подписчика и удалить его")
+    @DisplayName(" добавить подписчика и удалить его")
     public void shouldAddAndRemoveListener() {
         HwListener<Long, User> listener = (new HwListener<>() {
             @Override
