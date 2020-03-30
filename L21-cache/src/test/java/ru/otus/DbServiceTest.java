@@ -26,7 +26,7 @@ public class DbServiceTest {
     private DBServiceUser dbServiceUser;
 
     @Mock
-    private HwCache<Long, User> cache;
+    private HwCache<String, User> cache;
     @Mock
     private UserDao userDao;
     @Mock
@@ -42,7 +42,7 @@ public class DbServiceTest {
         sessionManager = mock(SessionManager.class);
         given(userDao.getSessionManager()).willReturn(sessionManager);
         given(userDao.saveUser(any())).willReturn(USER_ID);
-        given(cache.get(USER_ID)).willReturn(user);
+        given(cache.get(String.valueOf(USER_ID))).willReturn(user);
 
         dbServiceUser = new DbServiceUserImpl(userDao, cache);
     }
@@ -52,8 +52,8 @@ public class DbServiceTest {
     public void shouldSaveUserAndGetItFromCache() {
         dbServiceUser.saveUser(user);
         dbServiceUser.getUser(USER_ID).orElse(null);
-        verify(cache, times(1)).put(USER_ID, user);
-        verify(cache, times(1)).get(USER_ID);
+        verify(cache, times(1)).put(String.valueOf(USER_ID), user);
+        verify(cache, times(1)).get(String.valueOf(USER_ID));
         verify(userDao, times(0)).findById(USER_ID);
     }
 }

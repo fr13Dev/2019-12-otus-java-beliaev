@@ -12,9 +12,9 @@ import java.util.Optional;
 public class DbServiceUserImpl implements DBServiceUser {
     private static Logger logger = LoggerFactory.getLogger(DbServiceUserImpl.class);
     private final UserDao userDao;
-    private final HwCache<Long, User> cache;
+    private final HwCache<String, User> cache;
 
-    public DbServiceUserImpl(UserDao userDao, HwCache<Long, User> cache) {
+    public DbServiceUserImpl(UserDao userDao, HwCache<String, User> cache) {
         this.userDao = userDao;
         this.cache = cache;
     }
@@ -26,7 +26,7 @@ public class DbServiceUserImpl implements DBServiceUser {
             try {
                 long userId = userDao.saveUser(user);
                 sessionManager.commitSession();
-                cache.put(userId, user);
+                cache.put(String.valueOf(userId), user);
                 logger.info("created user: {}", userId);
                 return userId;
             } catch (Exception e) {
@@ -40,7 +40,7 @@ public class DbServiceUserImpl implements DBServiceUser {
     @Override
     public Optional<User> getUser(long id) {
         Optional<User> optionalUser;
-        var user = cache.get(id);
+        var user = cache.get(String.valueOf(id));
         if (user != null) {
             return Optional.of(user);
         } else {
@@ -48,6 +48,7 @@ public class DbServiceUserImpl implements DBServiceUser {
                 sessionManager.beginSession();
                 try {
                     optionalUser = userDao.findById(id);
+                    optionalUser.ifPresent(value -> cache.put(String.valueOf(value.getId()), value));
                     logger.info("user: {}", optionalUser.orElse(null));
                     return optionalUser;
                 } catch (Exception e) {
