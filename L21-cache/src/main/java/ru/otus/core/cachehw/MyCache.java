@@ -9,6 +9,10 @@ import java.util.Set;
 import java.util.WeakHashMap;
 
 public class MyCache<K, V> implements HwCache<K, V> {
+    private static final String REMOVE_ACTION = "remove";
+    private static final String PUT_ACTION = "put";
+    private static final String GET_ACTION = "get";
+
     private static final Logger logger = LoggerFactory.getLogger(MyCache.class);
     private final Map<K, V> storage = new WeakHashMap<>();
     private final Set<HwListener<K, V>> listeners = Collections.newSetFromMap(new WeakHashMap<>());
@@ -16,21 +20,21 @@ public class MyCache<K, V> implements HwCache<K, V> {
     @Override
     public void put(K key, V value) {
         storage.put(key, value);
-        listeners.forEach(i -> i.notify(key, value, "put"));
+        notifyListeners(key, value, PUT_ACTION);
         logger.debug("object is cached: {}", value);
     }
 
     @Override
     public void remove(K key) {
         final V removedObject = storage.remove(key);
-        listeners.forEach(i -> i.notify(key, removedObject, "remove"));
+        notifyListeners(key, removedObject, REMOVE_ACTION);
         logger.debug("object is removed: {}", removedObject);
     }
 
     @Override
     public V get(K key) {
         final V object = storage.get(key);
-        listeners.forEach(i -> i.notify(key, object, "get"));
+        notifyListeners(key, object, GET_ACTION);
         logger.debug("object is retrieved: {}", object);
         return object;
     }
@@ -45,5 +49,15 @@ public class MyCache<K, V> implements HwCache<K, V> {
     public void removeListener(HwListener<K, V> listener) {
         listeners.remove(listener);
         logger.debug("listener is removed: {}", listener);
+    }
+
+    private void notifyListeners(K key, V value, String action) {
+        listeners.forEach(listener -> {
+            try {
+                listener.notify(key, value, action);
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+            }
+        });
     }
 }
