@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>OtusJavaHW</artifactId>
+        <groupId>ru.otus</groupId>
+        <version>2019-12-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>L23-web-server</artifactId>
+
+    <name>L23-web-server</name>
+
+    <properties>
+        <jetty.server.version>9.4.27.v20200227</jetty.server.version>
+        <jetty.webapp.version>9.4.27.v20200227</jetty.webapp.version>
+        <freemarker.version>2.3.30</freemarker.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>${jetty.server.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-webapp</artifactId>
+            <version>${jetty.webapp.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>${freemarker.version}</version>
+        </dependency>
+
+    </dependencies>
+
+</project>
