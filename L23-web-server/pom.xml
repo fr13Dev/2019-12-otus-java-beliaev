@@ -17,6 +17,8 @@
         <jetty.server.version>9.4.27.v20200227</jetty.server.version>
         <jetty.webapp.version>9.4.27.v20200227</jetty.webapp.version>
         <freemarker.version>2.3.30</freemarker.version>
+        <mongo.version>3.12.1</mongo.version>
+        <jackson.version>2.10.3</jackson.version>
     </properties>
 
     <dependencies>
@@ -36,6 +38,18 @@
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
             <version>${freemarker.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver</artifactId>
+            <version>${mongo.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
 
     </dependencies>

@@ -7,9 +7,9 @@ import java.util.Optional;
 
 public interface UserDao {
 
-    long insert(User user);
+    <T> T insert(User user);
 
     Optional<User> findByLogin(String login);
 
-    Optional<List<User>> getAllUsers();
+    Optional<List<User>> findAll();
 }

@@ -26,7 +26,7 @@ public class UsersServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Map<String, Object> paramsMap = new HashMap<>();
-        userDao.getAllUsers().ifPresent(users -> paramsMap.put(TEMPLATE_ATTR_USERS, users));
+        userDao.findAll().ifPresent(users -> paramsMap.put(TEMPLATE_ATTR_USERS, users));
         paramsMap.put(TEMPLATE_ATTR_CURRENT_USER, req.getSession().getAttribute(TEMPLATE_ATTR_CURRENT_USER));
         resp.setContentType("text/html");
         var page = templateProcessor.getPage(USERS_PAGE, paramsMap);
