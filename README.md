@@ -16,3 +16,4 @@
 * **L17-jdbc** - custom orm implementation
 * **L19-hibernate** - hibernate
 * **L21-cache** - реализация кэша на основе WeakHashMap
+* **L23-web-server** - embedded jetty + mongo db
