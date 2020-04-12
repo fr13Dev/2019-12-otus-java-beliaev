@@ -1,5 +1,6 @@
 package ru.otus.repository;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 import ru.otus.domain.User;
 
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
+@Qualifier("inMemoryRepository")
 public class InMemoryUserRepository implements UserRepository {
     private final List<User> users = new ArrayList<>();
 

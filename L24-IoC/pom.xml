@@ -21,6 +21,8 @@
         <spring.version>5.2.5.RELEASE</spring.version>
         <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
         <servlet.version>4.0.1</servlet.version>
+        <mongo.version>3.12.1</mongo.version>
+        <jackson.version>2.10.3</jackson.version>
     </properties>
 
     <dependencies>
@@ -54,6 +56,16 @@
             <artifactId>javax.servlet-api</artifactId>
             <version>${servlet.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver</artifactId>
+            <version>${mongo.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
     </dependencies>
 

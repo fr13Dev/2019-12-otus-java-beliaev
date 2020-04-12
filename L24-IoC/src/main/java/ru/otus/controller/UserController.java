@@ -1,5 +1,6 @@
 package ru.otus.controller;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +16,7 @@ import java.util.Collections;
 public class UserController {
     private final UserRepository repository;
 
-    public UserController(UserRepository repository) {
+    public UserController(@Qualifier("mongoRepository") UserRepository repository) {
         this.repository = repository;
     }
 
