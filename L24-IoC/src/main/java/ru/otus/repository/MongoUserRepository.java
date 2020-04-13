@@ -3,13 +3,13 @@ package ru.otus.repository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 import ru.otus.domain.User;
+import ru.otus.service.SingleDatabaseMongoClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,16 +22,14 @@ public class MongoUserRepository implements UserRepository {
     private static final TypeReference<Map<String, Object>> STR_OBJECT_MAP_TYPE_REF = new TypeReference<>() {
     };
     private static final String ID_DOC_ATTR = "_id";
-    private static final String DB_NAME = "mongo-db";
-    private static final String USERS_COLLECTION_NAME = "users";
 
-    private final MongoClient client;
+    private final SingleDatabaseMongoClient client;
     private final MongoCollection<Document> collection;
     private final ObjectMapper mapper;
 
-    public MongoUserRepository(MongoClient client, ObjectMapper mapper) {
+    public MongoUserRepository(SingleDatabaseMongoClient client, ObjectMapper mapper) {
         this.client = client;
-        this.collection = getUsersCollection();
+        this.collection = client.getCollection(SingleDatabaseMongoClient.USERS_COLLECTION_NAME);
         this.mapper = mapper;
     }
 
@@ -64,9 +62,5 @@ public class MongoUserRepository implements UserRepository {
         } catch (JsonProcessingException e) {
             throw new IllegalStateException(e);
         }
-    }
-
-    private MongoCollection<Document> getUsersCollection() {
-        return client.getDatabase(DB_NAME).getCollection(USERS_COLLECTION_NAME);
     }
 }
