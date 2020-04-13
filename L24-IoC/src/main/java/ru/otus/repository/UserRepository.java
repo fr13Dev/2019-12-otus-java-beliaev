@@ -9,7 +9,5 @@ public interface UserRepository {
 
     <T> T insert(User user);
 
-    Optional<User> findByLogin(String login);
-
     Optional<List<User>> findAll();
 }

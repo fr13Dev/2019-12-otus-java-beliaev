@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.Filters;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -19,7 +18,8 @@ import java.util.Optional;
 @Repository
 @Qualifier("mongoRepository")
 public class MongoUserRepository implements UserRepository {
-    private static final TypeReference<Map<String, Object>> STR_OBJECT_MAP_TYPE_REF = new TypeReference<>() {};
+    private static final TypeReference<Map<String, Object>> STR_OBJECT_MAP_TYPE_REF = new TypeReference<>() {
+    };
     private static final String ID_DOC_ATTR = "_id";
     private static final String LOGIN_DOC_ATTR = "login";
 
@@ -37,13 +37,6 @@ public class MongoUserRepository implements UserRepository {
         document.remove(ID_DOC_ATTR);
         collection.insertOne(document);
         return (ObjectId) document.get(ID_DOC_ATTR);
-    }
-
-    @Override
-    public Optional<User> findByLogin(String login) {
-        var query = Filters.eq(LOGIN_DOC_ATTR, login);
-        var document = collection.find(query).first();
-        return Optional.of(document).map(this::document2User);
     }
 
     @Override

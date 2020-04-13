@@ -25,11 +25,6 @@ public class InMemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public Optional<User> findByLogin(String login) {
-        return Optional.of(new User("admin", "admin", "admin"));
-    }
-
-    @Override
     public Optional<List<User>> findAll() {
         return Optional.of(users);
     }
