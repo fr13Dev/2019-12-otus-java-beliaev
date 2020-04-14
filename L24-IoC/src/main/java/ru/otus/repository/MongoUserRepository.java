@@ -30,8 +30,9 @@ public class MongoUserRepository implements UserRepository {
 
     public MongoUserRepository(SingleDatabaseMongoClient client, ObjectMapper mapper) {
         this.client = client;
-        this.collection = client.getCollection(USERS_COLLECTION_NAME);
         this.mapper = mapper;
+        client.dropDatabase();
+        this.collection = client.getCollection(USERS_COLLECTION_NAME);
     }
 
     @Override

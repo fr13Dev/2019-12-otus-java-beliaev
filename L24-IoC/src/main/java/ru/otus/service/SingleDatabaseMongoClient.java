@@ -18,11 +18,14 @@ public class SingleDatabaseMongoClient {
                                      @Value("mongo-db") String dbName) {
         this.client = MongoClients.create(dbUrl);
         this.database = client.getDatabase(dbName);
-        database.drop();
         Runtime.getRuntime().addShutdownHook(new Thread(client::close));
     }
 
     public MongoCollection<Document> getCollection(String name) {
         return database.getCollection(name);
+    }
+
+    public void dropDatabase() {
+        database.drop();
     }
 }
