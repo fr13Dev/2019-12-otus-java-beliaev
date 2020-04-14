@@ -22,6 +22,7 @@ public class MongoUserRepository implements UserRepository {
     private static final TypeReference<Map<String, Object>> STR_OBJECT_MAP_TYPE_REF = new TypeReference<>() {
     };
     private static final String ID_DOC_ATTR = "_id";
+    private static final String USERS_COLLECTION_NAME = "users";
 
     private final SingleDatabaseMongoClient client;
     private final MongoCollection<Document> collection;
@@ -29,7 +30,7 @@ public class MongoUserRepository implements UserRepository {
 
     public MongoUserRepository(SingleDatabaseMongoClient client, ObjectMapper mapper) {
         this.client = client;
-        this.collection = client.getCollection(SingleDatabaseMongoClient.USERS_COLLECTION_NAME);
+        this.collection = client.getCollection(USERS_COLLECTION_NAME);
         this.mapper = mapper;
     }
 
