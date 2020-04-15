@@ -8,4 +8,6 @@ public interface SingleDatabaseMongoClient {
     MongoCollection<Document> getCollection(String name);
 
     void dropDatabase();
+
+    void close();
 }
