@@ -3,12 +3,13 @@ package ru.otus.appcontainer;
 import ru.otus.appcontainer.api.AppComponentsContainer;
 import ru.otus.appcontainer.api.AppComponentsContainerConfig;
 
+import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
 public class AppComponentsContainerImpl implements AppComponentsContainer {
-    private final Map<String, Object> appComponentsByName = new HashMap<>();
+    private final Map<String, Object> container = new HashMap<>();
     private final Reflection reflection;
 
     public AppComponentsContainerImpl(Class<?> initialConfigClass) {
@@ -19,13 +20,13 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
     @Override
     @SuppressWarnings("unchecked")
     public <C> C getAppComponent(Class<C> componentClass) {
-        return (C) appComponentsByName.get(reflection.getComponentName(componentClass));
+        return (C) container.get(reflection.getComponentName(componentClass));
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <C> C getAppComponent(String componentName) {
-        return (C) appComponentsByName.get(componentName.toUpperCase());
+        return (C) container.get(componentName);
     }
 
     private void processConfig(Class<?> configClass) {
@@ -34,8 +35,12 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
         for (Method method : methods) {
             var args = reflection.getMethodArgs(method, this);
             var bean = reflection.invokeMethod(method, args);
-            var name = reflection.getAnnotatedMethodName(method);
-            appComponentsByName.put(name.toUpperCase(), bean);
+            var interfaces = reflection.getObjectInterfaces(bean);
+            for (AnnotatedType intrface : interfaces) {
+                container.put(reflection.getComponentName(intrface), bean);
+            }
+            container.put(reflection.getComponentName(bean), bean);
+            container.put(reflection.getAnnotatedMethodName(method), bean);
         }
     }
 

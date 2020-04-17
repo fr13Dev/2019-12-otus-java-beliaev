@@ -3,6 +3,7 @@ package ru.otus.appcontainer;
 import ru.otus.appcontainer.api.AppComponent;
 import ru.otus.appcontainer.api.AppComponentsContainer;
 
+import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -37,6 +38,10 @@ public class Reflection {
         return method.getAnnotation(AppComponent.class).name();
     }
 
+    public AnnotatedType[] getObjectInterfaces(Object object) {
+        return object.getClass().getAnnotatedInterfaces();
+    }
+
     public Object[] getMethodArgs(Method method, AppComponentsContainer container) {
         var args = new Object[method.getParameterCount()];
         var parameters = method.getParameters();
@@ -48,7 +53,15 @@ public class Reflection {
     }
 
     public String getComponentName(Class<?> component) {
-        return component.getSimpleName().toUpperCase();
+        return component.getTypeName();
+    }
+
+    public String getComponentName(Object object) {
+        return object.getClass().getTypeName();
+    }
+
+    public String getComponentName(AnnotatedType type) {
+        return type.getType().getTypeName();
     }
 
     private Object createInstance() {
