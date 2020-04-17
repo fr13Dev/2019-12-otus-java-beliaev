@@ -2,6 +2,7 @@ package ru.otus.appcontainer;
 
 import ru.otus.appcontainer.api.AppComponent;
 import ru.otus.appcontainer.api.AppComponentsContainer;
+import ru.otus.appcontainer.api.AppComponentsContainerConfig;
 
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Method;
@@ -19,11 +20,30 @@ public class Reflection {
         this.instance = createInstance();
     }
 
-    public List<Method> getAnnotatedMethods() {
+    public List<Method> getSortedAnnotatedMethods() {
         return Arrays.stream(clazz.getMethods())
                 .filter(method -> method.isAnnotationPresent(AppComponent.class))
                 .sorted(Comparator.comparingInt(m -> m.getAnnotation(AppComponent.class).order()))
                 .collect(Collectors.toList());
+    }
+
+    public static List<Class<?>> getSortedConfigClasses(Class<?>... classes) {
+        return Arrays.stream(classes)
+                .peek(Reflection::checkConfigClass)
+                .sorted(Comparator.comparingInt(c -> c.getAnnotation(AppComponentsContainerConfig.class).order()))
+                .collect(Collectors.toList());
+    }
+
+    public static String getComponentName(Class<?> component) {
+        return component.getTypeName();
+    }
+
+    public static String getComponentName(Object object) {
+        return object.getClass().getTypeName();
+    }
+
+    public static String getComponentName(AnnotatedType type) {
+        return type.getType().getTypeName();
     }
 
     public Object invokeMethod(Method method, Object... args) {
@@ -47,21 +67,9 @@ public class Reflection {
         var parameters = method.getParameters();
         for (int i = 0; i < parameters.length; i++) {
             final Class<?> type = parameters[i].getType();
-            args[i] = container.getAppComponent(getComponentName(type));
+            args[i] = container.getAppComponent(Reflection.getComponentName(type));
         }
         return args;
-    }
-
-    public String getComponentName(Class<?> component) {
-        return component.getTypeName();
-    }
-
-    public String getComponentName(Object object) {
-        return object.getClass().getTypeName();
-    }
-
-    public String getComponentName(AnnotatedType type) {
-        return type.getType().getTypeName();
     }
 
     private Object createInstance() {
@@ -69,6 +77,12 @@ public class Reflection {
             return clazz.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             throw new IllegalStateException(e);
+        }
+    }
+
+    private static void checkConfigClass(Class<?> configClass) {
+        if (!configClass.isAnnotationPresent(AppComponentsContainerConfig.class)) {
+            throw new IllegalArgumentException(String.format("Given class is not config %s", configClass.getName()));
         }
     }
 }

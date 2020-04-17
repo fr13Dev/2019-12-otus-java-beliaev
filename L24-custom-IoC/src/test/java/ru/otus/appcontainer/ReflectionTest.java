@@ -17,7 +17,7 @@ class ReflectionTest {
     @Test
     @DisplayName(" должен вернуть отсортированный список аннотированных методов")
     public void shouldReturnSortedListOfAnnotatedMethods() {
-        var methods = reflection.getAnnotatedMethods();
+        var methods = reflection.getSortedAnnotatedMethods();
         assertThat(methods).isNotEmpty()
                 .isSortedAccordingTo(Comparator.comparingInt(m -> m.getAnnotation(AppComponent.class).order()))
                 .hasSize(4);
