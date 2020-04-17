@@ -32,7 +32,7 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
         checkConfigClass(configClass);
         var methods = reflection.getAnnotatedMethods();
         for (Method method : methods) {
-            var args = getMethodArgs(method);
+            var args = reflection.getMethodArgs(method, this);
             var bean = reflection.invokeMethod(method, args);
             var name = reflection.getAnnotatedMethodName(method);
             appComponentsByName.put(name.toUpperCase(), bean);
@@ -43,15 +43,5 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
         if (!configClass.isAnnotationPresent(AppComponentsContainerConfig.class)) {
             throw new IllegalArgumentException(String.format("Given class is not config %s", configClass.getName()));
         }
-    }
-
-    private Object[] getMethodArgs(Method method) {
-        var args = new Object[method.getParameterCount()];
-        var parameters = method.getParameters();
-        for (int i = 0; i < parameters.length; i++) {
-            final Class<?> type = parameters[i].getType();
-            args[i] = appComponentsByName.get(reflection.getComponentName(type));
-        }
-        return args;
     }
 }

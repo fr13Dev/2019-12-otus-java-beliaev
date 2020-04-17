@@ -1,6 +1,7 @@
 package ru.otus.appcontainer;
 
 import ru.otus.appcontainer.api.AppComponent;
+import ru.otus.appcontainer.api.AppComponentsContainer;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -34,6 +35,16 @@ public class Reflection {
 
     public String getAnnotatedMethodName(Method method) {
         return method.getAnnotation(AppComponent.class).name();
+    }
+
+    public Object[] getMethodArgs(Method method, AppComponentsContainer container) {
+        var args = new Object[method.getParameterCount()];
+        var parameters = method.getParameters();
+        for (int i = 0; i < parameters.length; i++) {
+            final Class<?> type = parameters[i].getType();
+            args[i] = container.getAppComponent(getComponentName(type));
+        }
+        return args;
     }
 
     public String getComponentName(Class<?> component) {
