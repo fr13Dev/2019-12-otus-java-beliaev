@@ -2,15 +2,13 @@ package ru.otus.appcontainer;
 
 import ru.otus.appcontainer.api.AppComponentsContainer;
 
-import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @SuppressWarnings("unused")
 public class AppComponentsContainerImpl implements AppComponentsContainer {
-    private final Map<String, Object> container = new HashMap<>();
+    private final List<Object> appComponents = new ArrayList<>();
+    private final Map<String, Object> componentsByName = new HashMap<>();
     private final Map<Class<?>, Reflection> reflections = new HashMap<>();
 
     public AppComponentsContainerImpl(Class<?> initialConfigClass) {
@@ -31,13 +29,23 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
     @Override
     @SuppressWarnings("unchecked")
     public <C> C getAppComponent(Class<C> componentClass) {
-        return (C) container.get(Reflection.getComponentName(componentClass));
+        C bean = null;
+        for (Object component : appComponents) {
+            if (componentClass.isAssignableFrom(component.getClass())) {
+                bean = (C) component;
+                break;
+            }
+        }
+        if (bean == null) {
+            throw new NoSuchElementException(String.format("No any bean for %s", componentClass.getName()));
+        }
+        return bean;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <C> C getAppComponent(String componentName) {
-        return (C) container.get(componentName);
+        return (C) componentsByName.get(componentName);
     }
 
     private void processConfigClasses(List<Class<?>> configClasses) {
@@ -53,12 +61,8 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
         for (Method method : methods) {
             var args = reflection.getMethodArgs(method, this);
             var bean = reflection.invokeMethod(method, args);
-            var interfaces = reflection.getObjectInterfaces(bean);
-            for (AnnotatedType intrface : interfaces) {
-                container.put(Reflection.getComponentName(intrface), bean);
-            }
-            container.put(Reflection.getComponentName(bean), bean);
-            container.put(reflection.getAnnotatedMethodName(method), bean);
+            appComponents.add(bean);
+            componentsByName.put(reflection.getAnnotatedMethodName(method), bean);
         }
     }
 }
