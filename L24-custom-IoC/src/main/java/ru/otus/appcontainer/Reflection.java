@@ -2,7 +2,6 @@ package ru.otus.appcontainer;
 
 import ru.otus.appcontainer.api.AppComponent;
 import ru.otus.appcontainer.api.AppComponentsContainer;
-import ru.otus.appcontainer.api.AppComponentsContainerConfig;
 
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Method;
@@ -24,13 +23,6 @@ public class Reflection {
         return Arrays.stream(clazz.getMethods())
                 .filter(method -> method.isAnnotationPresent(AppComponent.class))
                 .sorted(Comparator.comparingInt(m -> m.getAnnotation(AppComponent.class).order()))
-                .collect(Collectors.toList());
-    }
-
-    public static List<Class<?>> getSortedConfigClasses(Class<?>... classes) {
-        return Arrays.stream(classes)
-                .peek(Reflection::checkConfigClass)
-                .sorted(Comparator.comparingInt(c -> c.getAnnotation(AppComponentsContainerConfig.class).order()))
                 .collect(Collectors.toList());
     }
 
@@ -77,12 +69,6 @@ public class Reflection {
             return clazz.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             throw new IllegalStateException(e);
-        }
-    }
-
-    private static void checkConfigClass(Class<?> configClass) {
-        if (!configClass.isAnnotationPresent(AppComponentsContainerConfig.class)) {
-            throw new IllegalArgumentException(String.format("Given class is not config %s", configClass.getName()));
         }
     }
 }

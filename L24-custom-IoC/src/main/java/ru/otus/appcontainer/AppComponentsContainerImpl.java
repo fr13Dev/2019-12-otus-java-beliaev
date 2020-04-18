@@ -1,13 +1,11 @@
 package ru.otus.appcontainer;
 
-import org.reflections.Reflections;
-import org.reflections.scanners.TypeAnnotationsScanner;
 import ru.otus.appcontainer.api.AppComponentsContainer;
-import ru.otus.appcontainer.api.AppComponentsContainerConfig;
 
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("unused")
@@ -21,13 +19,13 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
     }
 
     public AppComponentsContainerImpl(Class<?>... initialConfigClasses) {
-        processConfigClasses(initialConfigClasses);
+        var configClassesWrapper = new ConfigClassesWrapper(initialConfigClasses);
+        processConfigClasses(configClassesWrapper.getConfigClasses());
     }
 
     public AppComponentsContainerImpl(String packageName) {
-        var reflections = new Reflections(packageName, new TypeAnnotationsScanner());
-        var classes = reflections.getTypesAnnotatedWith(AppComponentsContainerConfig.class, true);
-        processConfigClasses(classes.toArray(new Class[classes.size()]));
+        var configClassesWrapper = new ConfigClassesWrapper(packageName);
+        processConfigClasses(configClassesWrapper.getConfigClasses());
     }
 
     @Override
@@ -42,12 +40,9 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
         return (C) container.get(componentName);
     }
 
-    private void processConfigClasses(Class<?>[] initialConfigClasses) {
-        for (Class<?> configClass : initialConfigClasses) {
-            reflections.put(configClass, new Reflection(configClass));
-        }
-        var configClasses = Reflection.getSortedConfigClasses(initialConfigClasses);
+    private void processConfigClasses(List<Class<?>> configClasses) {
         for (Class<?> configClass : configClasses) {
+            reflections.put(configClass, new Reflection(configClass));
             processConfig(configClass);
         }
     }
