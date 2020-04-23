@@ -1,6 +1,6 @@
 package ru.otus;
 
-public class AbstractCounter {
+public abstract class AbstractCounter {
     protected final Printer printer;
     protected static final int LIMIT = 10;
     protected Direction direction = Direction.FORWARD;
