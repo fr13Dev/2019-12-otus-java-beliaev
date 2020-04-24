@@ -33,6 +33,7 @@
         <module>L21-cache</module>
         <module>L23-web-server</module>
         <module>L24-IoC</module>
+        <module>L27-number-sequence</module>
     </modules>
 
     <properties>

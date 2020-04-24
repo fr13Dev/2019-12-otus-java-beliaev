@@ -18,3 +18,4 @@
 * **L21-cache** - реализация кэша на основе WeakHashMap
 * **L23-web-server** - embedded jetty + mongo db
 * **L24-IoC** - spring IoC, spring mvc
+* **L27-number-sequence** - синхронизация работы многопоточного приложения
