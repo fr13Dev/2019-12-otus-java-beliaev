@@ -29,17 +29,10 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
     @Override
     @SuppressWarnings("unchecked")
     public <C> C getAppComponent(Class<C> componentClass) {
-        C bean = null;
-        for (Object component : appComponents) {
-            if (componentClass.isAssignableFrom(component.getClass())) {
-                bean = (C) component;
-                break;
-            }
-        }
-        if (bean == null) {
-            throw new NoSuchElementException(String.format("No any bean for %s", componentClass.getName()));
-        }
-        return bean;
+        return (C) appComponents.stream()
+                .filter(c -> componentClass.isAssignableFrom(c.getClass()))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException(String.format("No any bean for %s", componentClass.getName())));
     }
 
     @Override
