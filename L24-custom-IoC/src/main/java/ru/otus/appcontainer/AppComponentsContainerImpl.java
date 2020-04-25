@@ -59,7 +59,7 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
         var reflection = reflections.get(configClass);
         var methods = reflection.getSortedAnnotatedMethods();
         for (Method method : methods) {
-            var args = reflection.getMethodArgs(method, this);
+            var args = reflection.getMethodArgs(method, this::getAppComponent);
             var bean = reflection.invokeMethod(method, args);
             appComponents.add(bean);
             componentsByName.put(reflection.getAnnotatedMethodName(method), bean);
