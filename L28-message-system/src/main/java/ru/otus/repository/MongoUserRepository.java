@@ -8,7 +8,7 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Repository;
 import ru.otus.domain.User;
-import ru.otus.service.SingleDatabaseMongoClient;
+import ru.otus.service.db.SingleDatabaseMongoClient;
 
 import java.util.ArrayList;
 import java.util.List;

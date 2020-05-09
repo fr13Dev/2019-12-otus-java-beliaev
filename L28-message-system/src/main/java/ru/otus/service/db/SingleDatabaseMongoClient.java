@@ -1,4 +1,4 @@
-package ru.otus.service;
+package ru.otus.service.db;
 
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
