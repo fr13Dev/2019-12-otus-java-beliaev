@@ -17,8 +17,6 @@ import ru.otus.service.db.SingleDatabaseMongoClientImpl;
 import ru.otus.service.frontend.FrontendService;
 import ru.otus.service.frontend.FrontendServiceImpl;
 
-import javax.annotation.PostConstruct;
-
 @Configuration
 @ComponentScan
 public class AppConfig {
@@ -45,36 +43,34 @@ public class AppConfig {
 
     @Bean(destroyMethod = "dispose")
     public MessageSystem messageSystem() {
-        return new MessageSystemImpl();
+        var messageSystem = new MessageSystemImpl();
+
+        var databaseMsClient = databaseMsClient(messageSystem);
+        messageSystem.addClient(databaseMsClient);
+
+        var frontendMsClient = frontendMsClient(messageSystem);
+        messageSystem.addClient(frontendMsClient);
+        return messageSystem;
     }
 
     @Bean
-    public MsClient databaseMsClient() {
-        return new MsClientImpl(DATABASE_SERVICE_CLIENT_NAME, messageSystem());
-    }
-
-    @Bean
-    public MsClient frontendMsClient() {
-        return new MsClientImpl(FRONTEND_SERVICE_CLIENT_NAME, messageSystem());
-    }
-
-    @Bean
-    public FrontendService frontendService() {
-        return new FrontendServiceImpl(frontendMsClient(), DATABASE_SERVICE_CLIENT_NAME);
-    }
-
-    @PostConstruct
-    private void postConstruct() {
-        var databaseMsClient = databaseMsClient();
+    public MsClient databaseMsClient(MessageSystem messageSystem) {
+        var databaseMsClient = new MsClientImpl(DATABASE_SERVICE_CLIENT_NAME, messageSystem);
         databaseMsClient.addHandler(MessageType.ALL_USERS, new GetAllUsersRequestHandler(dbService));
         databaseMsClient.addHandler(MessageType.INSERT_USER, new InsertUserRequestHandler(dbService));
+        return databaseMsClient;
+    }
 
-        var frontendMsClient = frontendMsClient();
-        frontendMsClient.addHandler(MessageType.ALL_USERS, new GetAllUsersResponseHandler(frontendService()));
-        frontendMsClient.addHandler(MessageType.INSERT_USER, new InsertUserResponseHandler(frontendService()));
+    @Bean
+    public MsClient frontendMsClient(MessageSystem messageSystem) {
+        var frontendMsClient = new MsClientImpl(FRONTEND_SERVICE_CLIENT_NAME, messageSystem);
+        frontendMsClient.addHandler(MessageType.ALL_USERS, new GetAllUsersResponseHandler(frontendService(frontendMsClient)));
+        frontendMsClient.addHandler(MessageType.INSERT_USER, new InsertUserResponseHandler(frontendService(frontendMsClient)));
+        return frontendMsClient;
+    }
 
-        var messageSystem = messageSystem();
-        messageSystem.addClient(databaseMsClient);
-        messageSystem.addClient(frontendMsClient);
+    @Bean
+    public FrontendService frontendService(MsClient frontendMsClient) {
+        return new FrontendServiceImpl(frontendMsClient, DATABASE_SERVICE_CLIENT_NAME);
     }
 }
