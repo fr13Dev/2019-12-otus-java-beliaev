@@ -43,7 +43,7 @@ public class AppConfig {
         return new SingleDatabaseMongoClientImpl(mongoClient, DB_NAME);
     }
 
-    @Bean(initMethod = "start", destroyMethod = "dispose")
+    @Bean(destroyMethod = "dispose")
     public MessageSystem messageSystem() {
         return new MessageSystemImpl();
     }
