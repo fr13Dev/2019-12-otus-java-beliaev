@@ -36,6 +36,7 @@
         <module>L24-custom-IoC</module>
         <module>L27-number-sequence</module>
         <module>L28-message-system</module>
+        <module>L30-message-server</module>
     </modules>
 
     <properties>
