@@ -37,6 +37,7 @@
         <module>L27-number-sequence</module>
         <module>L28-message-system</module>
         <module>L30-message-server</module>
+        <module>L30-db-server</module>
     </modules>
 
     <properties>
