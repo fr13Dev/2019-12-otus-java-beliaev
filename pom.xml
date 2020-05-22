@@ -38,6 +38,7 @@
         <module>L28-message-system</module>
         <module>L30-message-server</module>
         <module>L30-db-server</module>
+        <module>L30-frontend-server</module>
     </modules>
 
     <properties>

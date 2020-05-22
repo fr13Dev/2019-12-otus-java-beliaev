@@ -14,9 +14,10 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 @Component
-public class SocketDbServer {
-    private static final Logger logger = LoggerFactory.getLogger(SocketDbServer.class);
-    @Value("${db.server.port}")
+public class SocketFrontendServer {
+    private static final Logger logger = LoggerFactory.getLogger(SocketFrontendServer.class);
+
+    @Value("${frontend.server.port}")
     private int port;
     @Autowired
     private MsClient msClient;

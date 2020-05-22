@@ -3,22 +3,24 @@ package ru.otus.messagesystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.common.Serializers;
+import ru.otus.socket.SocketDbClient;
 
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class DbServerClient implements MsClient {
-    private static final Logger logger = LoggerFactory.getLogger(DbServerClient.class);
+public class DbMsClient implements MsClient {
+    private static final Logger logger = LoggerFactory.getLogger(DbMsClient.class);
 
     private final String name;
-    private final MessageSystem messageSystem;
+    //private final MessageSystem messageSystem;
     private final Map<String, RequestHandler> handlers = new ConcurrentHashMap<>();
+    private final SocketDbClient socketClient;
 
-
-    public DbServerClient(String name, MessageSystem messageSystem) {
+    public DbMsClient(String name, SocketDbClient socketClient) {
         this.name = name;
-        this.messageSystem = messageSystem;
+        this.socketClient = socketClient;
+        //this.messageSystem = messageSystem;
     }
 
     @Override
@@ -33,11 +35,8 @@ public class DbServerClient implements MsClient {
 
     @Override
     public boolean sendMessage(Message msg) {
-        boolean result = messageSystem.newMessage(msg);
-        if (!result) {
-            logger.error("the last message was rejected: {}", msg);
-        }
-        return result;
+        socketClient.sendMessage(msg);
+        return true;
     }
 
     @Override
@@ -65,7 +64,7 @@ public class DbServerClient implements MsClient {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        DbServerClient msClient = (DbServerClient) o;
+        DbMsClient msClient = (DbMsClient) o;
         return Objects.equals(name, msClient.name);
     }
 

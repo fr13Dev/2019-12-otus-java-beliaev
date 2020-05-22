@@ -2,6 +2,7 @@ package ru.otus.messagesystem;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import ru.otus.common.Serializers;
 import ru.otus.socket.SocketClient;
 
@@ -9,16 +10,15 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class MsClientImpl implements MsClient {
-    private static final Logger logger = LoggerFactory.getLogger(MsClientImpl.class);
-
-    private final String name;
-    private final Map<String, RequestHandler> handlers = new ConcurrentHashMap<>();
+public class FrontendMsClient implements MsClient {
+    private static final Logger logger = LoggerFactory.getLogger(FrontendMsClient.class);
+    @Value("${frontend.name}")
+    private String name;
     private final SocketClient socketClient;
+    private final Map<String, RequestHandler> handlers = new ConcurrentHashMap<>();
 
 
-    public MsClientImpl(String name, SocketClient socketClient) {
-        this.name = name;
+    public FrontendMsClient(SocketClient socketClient) {
         this.socketClient = socketClient;
     }
 
@@ -42,7 +42,12 @@ public class MsClientImpl implements MsClient {
     public void handle(Message msg) {
         logger.info("new message:{}", msg);
         try {
-           sendMessage(msg);
+            RequestHandler requestHandler = handlers.get(msg.getType());
+            if (requestHandler != null) {
+                requestHandler.handle(msg).ifPresent(this::sendMessage);
+            } else {
+                logger.error("handler not found for the message type:{}", msg.getType());
+            }
         } catch (Exception ex) {
             logger.error("msg:" + msg, ex);
         }
@@ -58,7 +63,7 @@ public class MsClientImpl implements MsClient {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        MsClientImpl msClient = (MsClientImpl) o;
+        FrontendMsClient msClient = (FrontendMsClient) o;
         return Objects.equals(name, msClient.name);
     }
 
