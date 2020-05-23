@@ -22,6 +22,7 @@
         <jackson.version>2.10.3</jackson.version>
         <spring.version>5.2.5.RELEASE</spring.version>
         <logback.version>1.2.3</logback.version>
+        <messagesystem.version>2019-12-SNAPSHOT</messagesystem.version>
     </properties>
 
     <dependencies>
@@ -52,6 +53,13 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>${logback.version}</version>
+        </dependency>
+
+        <!--Custom-->
+        <dependency>
+            <groupId>ru.otus</groupId>
+            <artifactId>L30-message-system</artifactId>
+            <version>${messagesystem.version}</version>
         </dependency>
     </dependencies>
 

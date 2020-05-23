@@ -13,6 +13,7 @@ import java.net.Socket;
 @Component
 public class SocketDbClient {
     private static final Logger logger = LoggerFactory.getLogger(SocketDbClient.class);
+
     @Value("${message.server.host}")
     private String messageServerHost;
     @Value("${message.server.port}")

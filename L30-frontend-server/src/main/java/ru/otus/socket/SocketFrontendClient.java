@@ -11,14 +11,14 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 @Component
-public class SocketFrontendClient implements SocketClient {
+public class SocketFrontendClient {
     private static final Logger logger = LoggerFactory.getLogger(SocketFrontendClient.class);
+
     @Value("${message.server.host}")
     private String messageServerHost;
     @Value("${message.server.port}")
     private int messageServerPort;
 
-    @Override
     public void sendMessage(Message message) {
         logger.info("Message {} was received from {}", message.getId(), message.getFrom());
         logger.info("connected to the host {} on {} port", messageServerHost, messageServerPort);

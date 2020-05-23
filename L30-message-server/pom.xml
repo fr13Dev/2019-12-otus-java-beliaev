@@ -19,9 +19,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>5.2.5.RELEASE</spring.version>
         <logback.version>1.2.3</logback.version>
+        <messagesystem.version>2019-12-SNAPSHOT</messagesystem.version>
     </properties>
 
     <dependencies>
+        <!--Spring-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
@@ -32,10 +34,19 @@
             <artifactId>spring-context</artifactId>
             <version>${spring.version}</version>
         </dependency>
+
+        <!--Logs-->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>${logback.version}</version>
+        </dependency>
+
+        <!--Custom-->
+        <dependency>
+            <groupId>ru.otus</groupId>
+            <artifactId>L30-message-system</artifactId>
+            <version>${messagesystem.version}</version>
         </dependency>
     </dependencies>
 

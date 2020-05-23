@@ -13,14 +13,12 @@ public class DbMsClient implements MsClient {
     private static final Logger logger = LoggerFactory.getLogger(DbMsClient.class);
 
     private final String name;
-    //private final MessageSystem messageSystem;
     private final Map<String, RequestHandler> handlers = new ConcurrentHashMap<>();
     private final SocketDbClient socketClient;
 
     public DbMsClient(String name, SocketDbClient socketClient) {
         this.name = name;
         this.socketClient = socketClient;
-        //this.messageSystem = messageSystem;
     }
 
     @Override

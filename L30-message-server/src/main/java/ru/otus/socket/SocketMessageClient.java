@@ -8,8 +8,9 @@ import java.io.BufferedOutputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class SocketMessageClient implements SocketClient {
+public class SocketMessageClient {
     private static final Logger logger = LoggerFactory.getLogger(SocketMessageClient.class);
+
     private final String messageServerHost;
     private final int messageServerPort;
 
@@ -18,7 +19,6 @@ public class SocketMessageClient implements SocketClient {
         this.messageServerPort = messageServerPort;
     }
 
-    @Override
     public void sendMessage(Message message) {
         logger.info("Message {} was received from {} to {}", message.getId(), message.getFrom(), message.getTo());
         logger.info("connected to the host {} on {} port", messageServerHost, messageServerPort);

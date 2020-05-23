@@ -2,9 +2,8 @@ package ru.otus.messagesystem;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import ru.otus.common.Serializers;
-import ru.otus.socket.SocketClient;
+import ru.otus.socket.SocketFrontendClient;
 
 import java.util.Map;
 import java.util.Objects;
@@ -12,14 +11,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class FrontendMsClient implements MsClient {
     private static final Logger logger = LoggerFactory.getLogger(FrontendMsClient.class);
-    @Value("${frontend.name}")
     private String name;
-    private final SocketClient socketClient;
+    private final SocketFrontendClient socketClient;
     private final Map<String, RequestHandler> handlers = new ConcurrentHashMap<>();
 
 
-    public FrontendMsClient(SocketClient socketClient) {
+    public FrontendMsClient(String name, SocketFrontendClient socketClient) {
         this.socketClient = socketClient;
+        this.name = name;
     }
 
     @Override

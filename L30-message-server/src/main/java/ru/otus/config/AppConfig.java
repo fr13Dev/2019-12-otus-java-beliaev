@@ -9,12 +9,10 @@ import ru.otus.messagesystem.MessageSystem;
 import ru.otus.messagesystem.MessageSystemImpl;
 import ru.otus.messagesystem.MsClient;
 import ru.otus.messagesystem.MsClientImpl;
-import ru.otus.socket.SocketClient;
 import ru.otus.socket.SocketMessageClient;
-import ru.otus.socket.SocketMessageServer;
 
 @Configuration
-@ComponentScan
+@ComponentScan(basePackages = "ru.otus")
 @PropertySource("classpath:application.properties")
 public class AppConfig {
     @Value("${frontend.name}")
@@ -55,17 +53,12 @@ public class AppConfig {
     }
 
     @Bean
-    public SocketMessageServer socketMessageServer() {
-        return new SocketMessageServer();
-    }
-
-    @Bean
-    public SocketClient dbSocketClient() {
+    public SocketMessageClient dbSocketClient() {
         return new SocketMessageClient(databaseServerHost, databaseServerPort);
     }
 
     @Bean
-    public SocketClient frontendSocketClient() {
+    public SocketMessageClient frontendSocketClient() {
         return new SocketMessageClient(frontendServerHost, frontendServerPort);
     }
 }

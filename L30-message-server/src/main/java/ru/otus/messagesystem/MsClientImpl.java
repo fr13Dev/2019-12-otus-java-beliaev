@@ -3,7 +3,7 @@ package ru.otus.messagesystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.common.Serializers;
-import ru.otus.socket.SocketClient;
+import ru.otus.socket.SocketMessageClient;
 
 import java.util.Map;
 import java.util.Objects;
@@ -14,10 +14,10 @@ public class MsClientImpl implements MsClient {
 
     private final String name;
     private final Map<String, RequestHandler> handlers = new ConcurrentHashMap<>();
-    private final SocketClient socketClient;
+    private final SocketMessageClient socketClient;
 
 
-    public MsClientImpl(String name, SocketClient socketClient) {
+    public MsClientImpl(String name, SocketMessageClient socketClient) {
         this.name = name;
         this.socketClient = socketClient;
     }
