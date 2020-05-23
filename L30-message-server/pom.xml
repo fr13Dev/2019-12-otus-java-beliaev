@@ -19,7 +19,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>5.2.5.RELEASE</spring.version>
         <logback.version>1.2.3</logback.version>
-        <messagesystem.version>2019-12-SNAPSHOT</messagesystem.version>
+        <messagesystem.version>1.0</messagesystem.version>
     </properties>
 
     <dependencies>

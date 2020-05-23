@@ -22,7 +22,7 @@
         <jackson.version>2.10.3</jackson.version>
         <spring.version>5.2.5.RELEASE</spring.version>
         <logback.version>1.2.3</logback.version>
-        <messagesystem.version>2019-12-SNAPSHOT</messagesystem.version>
+        <messagesystem.version>1.0</messagesystem.version>
     </properties>
 
     <dependencies>
@@ -62,5 +62,26 @@
             <version>${messagesystem.version}</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>ru.otus.DbServerApp</mainClass>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
