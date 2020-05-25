@@ -2,24 +2,23 @@ package ru.otus;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import ru.otus.socket.SocketMessageServer;
 
 import java.io.File;
 import java.io.IOException;
 
-@Component
 public class AppRunner {
     private static final Logger logger = LoggerFactory.getLogger(AppRunner.class);
 
-    @Autowired
-    private SocketMessageServer socketMessageServer;
-    @Value("${frontend.server.file}")
-    private String frontendServerFile;
-    @Value("${db.server.file}")
-    private String dbServerFile;
+    private final SocketMessageServer socketMessageServer;
+    private final String frontendServerFile;
+    private final String dbServerFile;
+
+    public AppRunner(SocketMessageServer socketMessageServer, String frontendServerFile, String dbServerFile) {
+        this.socketMessageServer = socketMessageServer;
+        this.frontendServerFile = frontendServerFile;
+        this.dbServerFile = dbServerFile;
+    }
 
     public void run() throws IOException {
         runJar(dbServerFile);

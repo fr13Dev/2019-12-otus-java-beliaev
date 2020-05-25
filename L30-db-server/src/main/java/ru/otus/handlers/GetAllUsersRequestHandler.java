@@ -14,6 +14,7 @@ import java.util.Optional;
 
 public class GetAllUsersRequestHandler implements RequestHandler {
     private static final Logger logger = LoggerFactory.getLogger(GetAllUsersRequestHandler.class);
+
     private final DbService dbService;
 
     public GetAllUsersRequestHandler(DbService dbService) {

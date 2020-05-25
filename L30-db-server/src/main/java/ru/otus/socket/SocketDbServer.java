@@ -2,9 +2,6 @@ package ru.otus.socket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import ru.otus.messagesystem.Message;
 import ru.otus.messagesystem.MsClient;
 
@@ -13,13 +10,16 @@ import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-@Component
 public class SocketDbServer {
     private static final Logger logger = LoggerFactory.getLogger(SocketDbServer.class);
-    @Value("${db.server.port}")
-    private int port;
-    @Autowired
-    private MsClient msClient;
+
+    private final int port;
+    private final MsClient msClient;
+
+    public SocketDbServer(int port, MsClient msClient) {
+        this.port = port;
+        this.msClient = msClient;
+    }
 
     public void start() {
         try (ServerSocket serverSocket = new ServerSocket(port)) {

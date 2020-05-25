@@ -17,6 +17,7 @@ import ru.otus.messagesystem.MsClient;
 import ru.otus.service.DbService;
 import ru.otus.service.SingleDatabaseMongoClientImpl;
 import ru.otus.socket.SocketDbClient;
+import ru.otus.socket.SocketDbServer;
 
 @Configuration
 @ComponentScan(basePackages = "ru.otus")
@@ -30,6 +31,16 @@ public class AppConfig {
     @Value("${db.server.name}")
     private String dbServerName;
 
+    @Value("${message.server.host}")
+    private String messageServerHost;
+    @Value("${message.server.port}")
+    private int messageServerPort;
+
+    @Value("${db.server.port}")
+    private int port;
+
+    @Autowired
+    private MsClient msClient;
     @Autowired
     private DbService dbService;
     @Autowired
@@ -54,5 +65,15 @@ public class AppConfig {
         dbMsClient.addHandler(MessageType.ALL_USERS, new GetAllUsersRequestHandler(dbService));
         dbMsClient.addHandler(MessageType.INSERT_USER, new InsertUserRequestHandler(dbService));
         return dbMsClient;
+    }
+
+    @Bean
+    public SocketDbClient socketDbClient() {
+        return new SocketDbClient(messageServerHost, messageServerPort);
+    }
+
+    @Bean
+    public SocketDbServer socketDbServer() {
+        return new SocketDbServer(port, msClient);
     }
 }

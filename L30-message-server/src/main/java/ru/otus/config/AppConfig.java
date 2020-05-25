@@ -1,15 +1,18 @@
 package ru.otus.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import ru.otus.AppRunner;
 import ru.otus.messagesystem.MessageSystem;
 import ru.otus.messagesystem.MessageSystemImpl;
 import ru.otus.messagesystem.MsClient;
 import ru.otus.messagesystem.MsClientImpl;
 import ru.otus.socket.SocketMessageClient;
+import ru.otus.socket.SocketMessageServer;
 
 @Configuration
 @ComponentScan(basePackages = "ru.otus")
@@ -29,6 +32,16 @@ public class AppConfig {
     private String frontendServerHost;
     @Value("${frontend.server.port}")
     private int frontendServerPort;
+
+    @Value("${frontend.server.file}")
+    private String frontendServerFile;
+    @Value("${db.server.file}")
+    private String dbServerFile;
+
+    @Value("${message.server.port}")
+    private int port;
+    @Autowired
+    private MessageSystem messageSystem;
 
     @Bean(destroyMethod = "dispose")
     public MessageSystem messageSystem() {
@@ -60,5 +73,15 @@ public class AppConfig {
     @Bean
     public SocketMessageClient frontendSocketClient() {
         return new SocketMessageClient(frontendServerHost, frontendServerPort);
+    }
+
+    @Bean
+    public AppRunner appRunner() {
+        return new AppRunner(socketMessageServer(), frontendServerFile, dbServerFile);
+    }
+
+    @Bean
+    public SocketMessageServer socketMessageServer() {
+        return new SocketMessageServer(port, messageSystem);
     }
 }

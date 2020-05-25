@@ -3,9 +3,6 @@ package ru.otus.socket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import ru.otus.messagesystem.Message;
 import ru.otus.messagesystem.MessageSystem;
 
@@ -14,14 +11,16 @@ import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-@Component
 public class SocketMessageServer {
     private static final Logger logger = LoggerFactory.getLogger(SocketMessageServer.class);
 
-    @Value("${message.server.port}")
-    private int port;
-    @Autowired
-    MessageSystem messageSystem;
+    private final int port;
+    private final MessageSystem messageSystem;
+
+    public SocketMessageServer(int port, MessageSystem messageSystem) {
+        this.port = port;
+        this.messageSystem = messageSystem;
+    }
 
     public void start() {
         try (ServerSocket serverSocket = new ServerSocket(port)) {

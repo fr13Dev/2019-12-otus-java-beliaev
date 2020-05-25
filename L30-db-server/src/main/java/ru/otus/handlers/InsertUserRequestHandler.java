@@ -13,6 +13,7 @@ import java.util.Optional;
 
 public class InsertUserRequestHandler implements RequestHandler {
     private static final Logger logger = LoggerFactory.getLogger(InsertUserRequestHandler.class);
+
     private final DbService dbService;
 
     public InsertUserRequestHandler(DbService dbService) {

@@ -2,22 +2,22 @@ package ru.otus.socket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import ru.otus.messagesystem.Message;
 
 import java.io.BufferedOutputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-@Component
 public class SocketDbClient {
     private static final Logger logger = LoggerFactory.getLogger(SocketDbClient.class);
 
-    @Value("${message.server.host}")
-    private String messageServerHost;
-    @Value("${message.server.port}")
-    private int messageServerPort;
+    private final String messageServerHost;
+    private final int messageServerPort;
+
+    public SocketDbClient(String messageServerHost, int messageServerPort) {
+        this.messageServerHost = messageServerHost;
+        this.messageServerPort = messageServerPort;
+    }
 
     public void sendMessage(Message message) {
         logger.info("Message {} was received from {}", message.getId(), message.getFrom());

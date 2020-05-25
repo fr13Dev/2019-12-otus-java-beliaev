@@ -19,6 +19,9 @@ import ru.otus.socket.SocketFrontendClient;
 public class AppConfig {
     @Value("${frontend.name}")
     String frontendName;
+    @Value("${db.server.name}")
+    private String databaseServiceClientName;
+
     @Autowired
     SocketFrontendClient socketFrontendClient;
 
@@ -32,6 +35,6 @@ public class AppConfig {
 
     @Bean
     public FrontendService frontendService(MsClient frontendMsClient) {
-        return new FrontendServiceImpl(frontendMsClient);
+        return new FrontendServiceImpl(frontendMsClient, databaseServiceClientName);
     }
 }
