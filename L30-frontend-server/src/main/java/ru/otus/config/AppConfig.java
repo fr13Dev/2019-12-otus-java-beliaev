@@ -12,8 +12,8 @@ import ru.otus.messagesystem.MessageType;
 import ru.otus.messagesystem.MsClient;
 import ru.otus.service.FrontendService;
 import ru.otus.service.FrontendServiceImpl;
-import ru.otus.socket.SocketFrontendClient;
 import ru.otus.socket.SocketFrontendServer;
+import ru.otus.socketrpocessor.SocketClient;
 
 @Configuration
 @ComponentScan
@@ -34,11 +34,11 @@ public class AppConfig {
     @Autowired
     private MsClient frontendMsClient;
     @Autowired
-    SocketFrontendClient socketFrontendClient;
+    SocketClient socketClient;
 
     @Bean
     public MsClient frontendMsClient() {
-        var frontendMsClient = new FrontendMsClient(frontendName, socketFrontendClient);
+        var frontendMsClient = new FrontendMsClient(frontendName, socketClient);
         frontendMsClient.addHandler(MessageType.ALL_USERS, new GetAllUsersResponseHandler(frontendService(frontendMsClient)));
         frontendMsClient.addHandler(MessageType.INSERT_USER, new InsertUserResponseHandler(frontendService(frontendMsClient)));
         return frontendMsClient;
@@ -55,7 +55,7 @@ public class AppConfig {
     }
 
     @Bean
-    public SocketFrontendClient socketFrontendClient() {
-        return new SocketFrontendClient(messageServerHost, messageServerPort);
+    public SocketClient socketFrontendClient() {
+        return new SocketClient(messageServerHost, messageServerPort);
     }
 }

@@ -16,8 +16,8 @@ import ru.otus.messagesystem.MessageType;
 import ru.otus.messagesystem.MsClient;
 import ru.otus.service.DbService;
 import ru.otus.service.SingleDatabaseMongoClientImpl;
-import ru.otus.socket.SocketDbClient;
 import ru.otus.socket.SocketDbServer;
+import ru.otus.socketrpocessor.SocketClient;
 
 @Configuration
 @ComponentScan(basePackages = "ru.otus")
@@ -44,7 +44,7 @@ public class AppConfig {
     @Autowired
     private DbService dbService;
     @Autowired
-    private SocketDbClient socketDbClient;
+    private SocketClient socketClient;
 
     @Bean
     public ObjectMapper objectMapper() {
@@ -61,15 +61,15 @@ public class AppConfig {
 
     @Bean
     public MsClient dbMsClient() {
-        var dbMsClient = new DbMsClient(dbServerName, socketDbClient);
+        var dbMsClient = new DbMsClient(dbServerName, socketClient);
         dbMsClient.addHandler(MessageType.ALL_USERS, new GetAllUsersRequestHandler(dbService));
         dbMsClient.addHandler(MessageType.INSERT_USER, new InsertUserRequestHandler(dbService));
         return dbMsClient;
     }
 
     @Bean
-    public SocketDbClient socketDbClient() {
-        return new SocketDbClient(messageServerHost, messageServerPort);
+    public SocketClient socketDbClient() {
+        return new SocketClient(messageServerHost, messageServerPort);
     }
 
     @Bean(destroyMethod = "shutdown")

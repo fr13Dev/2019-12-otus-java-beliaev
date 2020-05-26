@@ -11,8 +11,8 @@ import ru.otus.messagesystem.MessageSystem;
 import ru.otus.messagesystem.MessageSystemImpl;
 import ru.otus.messagesystem.MsClient;
 import ru.otus.messagesystem.MsClientImpl;
-import ru.otus.socket.SocketMessageClient;
 import ru.otus.socket.SocketMessageServer;
+import ru.otus.socketrpocessor.SocketClient;
 
 @Configuration
 @ComponentScan(basePackages = "ru.otus")
@@ -66,13 +66,13 @@ public class AppConfig {
     }
 
     @Bean
-    public SocketMessageClient dbSocketClient() {
-        return new SocketMessageClient(databaseServerHost, databaseServerPort);
+    public SocketClient dbSocketClient() {
+        return new SocketClient(databaseServerHost, databaseServerPort);
     }
 
     @Bean
-    public SocketMessageClient frontendSocketClient() {
-        return new SocketMessageClient(frontendServerHost, frontendServerPort);
+    public SocketClient frontendSocketClient() {
+        return new SocketClient(frontendServerHost, frontendServerPort);
     }
 
     @Bean

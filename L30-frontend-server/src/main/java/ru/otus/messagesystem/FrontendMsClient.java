@@ -3,7 +3,7 @@ package ru.otus.messagesystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.common.Serializers;
-import ru.otus.socket.SocketFrontendClient;
+import ru.otus.socketrpocessor.SocketClient;
 
 import java.util.Map;
 import java.util.Objects;
@@ -11,12 +11,12 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class FrontendMsClient implements MsClient {
     private static final Logger logger = LoggerFactory.getLogger(FrontendMsClient.class);
-    private String name;
-    private final SocketFrontendClient socketClient;
+
+    private final String name;
+    private final SocketClient socketClient;
     private final Map<String, RequestHandler> handlers = new ConcurrentHashMap<>();
 
-
-    public FrontendMsClient(String name, SocketFrontendClient socketClient) {
+    public FrontendMsClient(String name, SocketClient socketClient) {
         this.socketClient = socketClient;
         this.name = name;
     }
@@ -56,7 +56,6 @@ public class FrontendMsClient implements MsClient {
     public <T> Message produceMessage(String to, T data, MessageType msgType) {
         return new Message(name, to, null, msgType.getValue(), Serializers.serialize(data));
     }
-
 
     @Override
     public boolean equals(Object o) {

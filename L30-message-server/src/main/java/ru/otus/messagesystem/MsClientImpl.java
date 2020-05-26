@@ -3,7 +3,7 @@ package ru.otus.messagesystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.common.Serializers;
-import ru.otus.socket.SocketMessageClient;
+import ru.otus.socketrpocessor.SocketClient;
 
 import java.util.Map;
 import java.util.Objects;
@@ -13,11 +13,10 @@ public class MsClientImpl implements MsClient {
     private static final Logger logger = LoggerFactory.getLogger(MsClientImpl.class);
 
     private final String name;
+    private final SocketClient socketClient;
     private final Map<String, RequestHandler> handlers = new ConcurrentHashMap<>();
-    private final SocketMessageClient socketClient;
 
-
-    public MsClientImpl(String name, SocketMessageClient socketClient) {
+    public MsClientImpl(String name, SocketClient socketClient) {
         this.name = name;
         this.socketClient = socketClient;
     }
@@ -52,7 +51,6 @@ public class MsClientImpl implements MsClient {
     public <T> Message produceMessage(String to, T data, MessageType msgType) {
         return new Message(name, to, null, msgType.getValue(), Serializers.serialize(data));
     }
-
 
     @Override
     public boolean equals(Object o) {
