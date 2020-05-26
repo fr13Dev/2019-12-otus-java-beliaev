@@ -13,15 +13,26 @@ import ru.otus.messagesystem.MsClient;
 import ru.otus.service.FrontendService;
 import ru.otus.service.FrontendServiceImpl;
 import ru.otus.socket.SocketFrontendClient;
+import ru.otus.socket.SocketFrontendServer;
 
 @Configuration
 @ComponentScan
 public class AppConfig {
     @Value("${frontend.name}")
     String frontendName;
+    @Value("${frontend.server.port}")
+    private int frontendPort;
+
     @Value("${db.server.name}")
     private String databaseServiceClientName;
 
+    @Value("${message.server.host}")
+    private String messageServerHost;
+    @Value("${message.server.port}")
+    private int messageServerPort;
+
+    @Autowired
+    private MsClient frontendMsClient;
     @Autowired
     SocketFrontendClient socketFrontendClient;
 
@@ -36,5 +47,15 @@ public class AppConfig {
     @Bean
     public FrontendService frontendService(MsClient frontendMsClient) {
         return new FrontendServiceImpl(frontendMsClient, databaseServiceClientName);
+    }
+
+    @Bean(destroyMethod = "shutdown")
+    public SocketFrontendServer socketFrontendServer() {
+        return new SocketFrontendServer(frontendPort, frontendMsClient);
+    }
+
+    @Bean
+    public SocketFrontendClient socketFrontendClient() {
+        return new SocketFrontendClient(messageServerHost, messageServerPort);
     }
 }

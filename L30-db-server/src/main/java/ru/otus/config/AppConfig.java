@@ -72,7 +72,7 @@ public class AppConfig {
         return new SocketDbClient(messageServerHost, messageServerPort);
     }
 
-    @Bean
+    @Bean(destroyMethod = "shutdown")
     public SocketDbServer socketDbServer() {
         return new SocketDbServer(port, msClient);
     }
