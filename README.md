@@ -21,3 +21,4 @@
 * **L24-custom-IoC** - simple IoC container
 * **L27-number-sequence** - синхронизация работы многопоточного приложения
 * **L28-message-system** - message system, spring boot, web socket, jQuery, bootstrap
+* **L30-message-system, L30-message-system-server, L30-frontend-server, L30-db-server** - distributed application, which uses message broker and sockets as a message transport. 
