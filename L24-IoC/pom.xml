@@ -22,7 +22,7 @@
         <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
         <servlet.version>4.0.1</servlet.version>
         <mongo.version>3.12.1</mongo.version>
-        <jackson.version>2.10.3</jackson.version>
+        <jackson.version>2.10.5.1</jackson.version>
     </properties>
 
     <dependencies>
