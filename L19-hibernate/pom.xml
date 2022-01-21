@@ -16,7 +16,7 @@
     <properties>
         <hibernate-core.version>5.4.10.Final</hibernate-core.version>
         <logback.version>1.3.0-alpha5</logback.version>
-        <h2.version>1.4.200</h2.version>
+        <h2.version>2.1.210</h2.version>
         <assertj-core.version>3.15.0</assertj-core.version>
     </properties>
 
