@@ -14,7 +14,7 @@
     <name>L15-serialization</name>
 
     <properties>
-        <com.google.code.gson>2.8.5</com.google.code.gson>
+        <com.google.code.gson>2.8.9</com.google.code.gson>
         <javax.json-api>1.1.4</javax.json-api>
         <javax.json.version>1.1.4</javax.json.version>
     </properties>
