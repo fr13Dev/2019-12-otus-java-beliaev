@@ -17,7 +17,7 @@
         <jetty.server.version>9.4.27.v20200227</jetty.server.version>
         <jetty.webapp.version>9.4.27.v20200227</jetty.webapp.version>
         <freemarker.version>2.3.30</freemarker.version>
-        <mongo.version>3.12.1</mongo.version>
+        <mongo.version>3.12.8</mongo.version>
         <jackson.version>2.10.3</jackson.version>
     </properties>
 
