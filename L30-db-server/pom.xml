@@ -18,7 +18,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <mongo.version>3.11.2</mongo.version>
+        <mongo.version>3.11.3</mongo.version>
         <jackson.version>2.10.3</jackson.version>
         <spring.version>5.2.5.RELEASE</spring.version>
         <logback.version>1.2.3</logback.version>
